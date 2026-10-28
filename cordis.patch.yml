@@ -1,0 +1,28 @@
+# DSH bundle patch (not a flat overlay). Git install requires package.json:dsh.bundle.patch.
+# The first row provides installation-relative paths, so pnpm's versioned store is supported.
+- insert:
+    - id: autocad-tcvn-bundle-paths
+      name: '@phamtung17/dsh-autocad-tcvn'
+    - id: autocad-tcvn-mcp
+      name: '@deepseek-ai/dsh-mcp-client'
+      inject: [autocadBundle]
+      config:
+        serverName: cad_engineering
+        transport: stdio
+        command: !!js process.execPath
+        args: !!js '[ctx.autocadBundle.launcher]'
+        cwd: !!js ctx.autocadBundle.root
+        env:
+          CAD_OUTPUT_DIR: !!js ctx.autocadBundle.outputDir
+          CAD_DWT_DIR: !!js ctx.autocadBundle.dwtDir
+          CAD_RULES_DIR: !!js ctx.autocadBundle.rulesDir
+          CAD_APPROVAL_MODE: manual
+          CAD_AUTO_SETUP: '1'
+        toolCallTimeoutMs: 180000
+        failOnStartupError: true
+    - id: autocad-tcvn-skill-filesystem
+      name: '@deepseek-ai/dsh-skill-filesystem'
+      inject: [autocadBundle]
+      config:
+        providerName: autocad-tcvn-bundle-skills
+        customSkillDirs: !!js '[ctx.autocadBundle.skillsRoot, ctx.autocadBundle.disciplinesRoot]'

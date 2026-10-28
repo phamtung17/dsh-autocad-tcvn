@@ -1,0 +1,5 @@
+DSH AutoCAD Engineering Agent v1.4.0-local
+Target: DeepSeek Harness Web Git bundle + MCP stdio + AutoCAD 2025 English
+Package: @phamtung17/dsh-autocad-tcvn
+Release: 14-stage shared building model, detailed multi-discipline sheets, revision/coordination QA and traceable DWG/PDF handover.
+TCVN clause packs: local rule checks only, no official compliance certification.

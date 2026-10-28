@@ -1,0 +1,160 @@
+{
+  "version": "1.2.0-local",
+  "created_at": "2026-10-28T16:09:48.338458+07:00",
+  "python_tests": {
+    "passed": 120,
+    "skipped": 1,
+    "failed": 0
+  },
+  "node_tests": {
+    "passed": 6,
+    "failed": 0
+  },
+  "mcp": {
+    "registered_tools": 19,
+    "new_reference_tool_contracts_checked": 5,
+    "unapproved_reference_export": "REJECTED"
+  },
+  "reference": {
+    "profile_id": "stu4_fitout_v12",
+    "assets": 26,
+    "dwg_files": 19,
+    "host_drawings": 11,
+    "layouts": 35,
+    "roles": [
+      "ceiling",
+      "ceiling_detail",
+      "cover",
+      "dimension",
+      "drawing_list",
+      "elevation",
+      "elevation_location",
+      "existing",
+      "floor",
+      "floor_detail",
+      "lighting",
+      "mep_coordination",
+      "skirting",
+      "socket",
+      "wall_construction",
+      "wall_detail",
+      "wall_finish",
+      "wall_section"
+    ],
+    "model_viewports": 174,
+    "originals_unchanged": true,
+    "profile_sha256": "9762027714ba15f800d2c8cc8d3cc03f35b542f0c96e00336a4d55d238d67a55"
+  },
+  "native_verification": [
+    {
+      "name": "0.1 DRAWING LIST.dwg",
+      "model_types": {},
+      "layout_types_match": true,
+      "viewport_scale_and_frozen_layers_match": true,
+      "dxf": "E:\\0.codex\\dsh-autocad-TCVN\\output\\cad\\projects\\stu4_verified_v12\\QA\\0.1 DRAWING LIST_768155.dxf"
+    },
+    {
+      "name": "100 WALL PLAN.dwg",
+      "model_types": {
+        "INSERT": 190,
+        "TEXT": 4,
+        "LWPOLYLINE": 505,
+        "HATCH": 52,
+        "DIMENSION": 176,
+        "MLINE": 34,
+        "MTEXT": 28,
+        "LEADER": 57,
+        "OLE2FRAME": 1,
+        "LINE": 2835,
+        "CIRCLE": 15,
+        "ARC": 101,
+        "SPLINE": 8,
+        "ELLIPSE": 2
+      },
+      "layout_types_match": true,
+      "viewport_scale_and_frozen_layers_match": true,
+      "dxf": "E:\\0.codex\\dsh-autocad-TCVN\\output\\cad\\projects\\stu4_verified_v12\\QA\\100 WALL PLAN_fbd122.dxf"
+    },
+    {
+      "name": "102 CEILING PLAN.dwg",
+      "model_types": {
+        "TEXT": 170,
+        "INSERT": 275,
+        "LWPOLYLINE": 251,
+        "LEADER": 32,
+        "HATCH": 40,
+        "MTEXT": 54,
+        "DIMENSION": 169,
+        "OLE2FRAME": 3,
+        "MLINE": 4,
+        "CIRCLE": 8,
+        "LINE": 18,
+        "ATTDEF": 66
+      },
+      "layout_types_match": true,
+      "viewport_scale_and_frozen_layers_match": true,
+      "dxf": "E:\\0.codex\\dsh-autocad-TCVN\\output\\cad\\projects\\stu4_verified_v12\\QA\\102 CEILING PLAN_3c9994.dxf"
+    },
+    {
+      "name": "104 mặt đứng.dwg",
+      "model_types": {
+        "HATCH": 267,
+        "INSERT": 420,
+        "LWPOLYLINE": 776,
+        "LINE": 337,
+        "MTEXT": 34,
+        "ARC": 10,
+        "ELLIPSE": 4,
+        "CIRCLE": 3,
+        "TEXT": 105,
+        "SPLINE": 3,
+        "WIPEOUT": 12,
+        "DIMENSION": 243,
+        "MLINE": 7
+      },
+      "layout_types_match": true,
+      "viewport_scale_and_frozen_layers_match": true,
+      "dxf": "E:\\0.codex\\dsh-autocad-TCVN\\output\\cad\\projects\\stu4_verified_v12\\QA\\104 mặt đứng_59524a.dxf"
+    },
+    {
+      "name": "301 WALL DETAILS.dwg",
+      "model_types": {
+        "INSERT": 2
+      },
+      "layout_types_match": true,
+      "viewport_scale_and_frozen_layers_match": true,
+      "dxf": "E:\\0.codex\\dsh-autocad-TCVN\\output\\cad\\projects\\stu4_verified_v12\\QA\\301 WALL DETAILS_9b78e4.dxf"
+    }
+  ],
+  "pdf_pages_rendered": 35,
+  "visual_review": "Reviewed all 35 pages in three contact sheets; inspected dimension, elevation, wall-detail and floor-detail pages at full rendering resolution",
+  "native_attribute_test": {
+    "tag": "FIT-OUT",
+    "new_value": "FIT-OUT STU4 V12",
+    "value_found_in_pdf": true,
+    "plot_path_restored": true
+  },
+  "known_limits": {
+    "mode": "REFERENCE_REISSUE: retains reference design; not automatically a new engineered project",
+    "missing_source_fonts": [
+      "au101s01.shx",
+      "hoatbif.shx",
+      "hztxt.shx",
+      "sme.shx",
+      "uv-abc.shx",
+      "vn1.shx",
+      "vns.shx",
+      "vntimeh.shx"
+    ],
+    "font_substitution_accepted_for_demo": true,
+    "dst": "Reference DST retained; Sheet Set database not rebuilt or rebased",
+    "index": "Native reference drawing-index tables retained; CSV and PDF bookmarks regenerated for the selected 35 layouts",
+    "live_current_codex_session": "Reload MCP or start a new Codex session to load the five newly registered tools"
+  },
+  "outputs": {
+    "pdf": "E:\\0.codex\\dsh-autocad-TCVN\\output\\reference_delivery_v12\\STU4_HO_SO_35_LAYOUT.pdf",
+    "native_package": "E:\\0.codex\\dsh-autocad-TCVN\\output\\reference_delivery_v12\\STU4_DWG_XREF_PDF.zip",
+    "source": "E:\\0.codex\\dsh-autocad-TCVN\\output\\reference_delivery_v12\\PLUGIN_1.2.0-local_SOURCE.zip",
+    "profile": "E:\\0.codex\\dsh-autocad-TCVN\\output\\reference_delivery_v12\\PROFILE_STU4_V12.zip"
+  }
+}

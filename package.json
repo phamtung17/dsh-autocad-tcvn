@@ -1,0 +1,50 @@
+{
+  "name": "@phamtung17/dsh-autocad-tcvn",
+  "version": "1.4.0-local",
+  "description": "DeepSeek Harness installable bundle for AutoCAD 2025 TCVN engineering MCP tools and 10 skills",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "scripts/*.cjs",
+    "autocad_agent/**/*.py",
+    "tools/demo_new_design.py",
+    "tools/publish_new_design.py",
+    "tools/verify_building_output.py",
+    "tools/merge_native_revision.py",
+    "skills/**/SKILL.md",
+    "standards/**/*.json",
+    "standards/**/*.md",
+    "requirements.txt",
+    "requirements-windows.txt",
+    "README.md",
+    "docs/GITHUB_INSTALL.md",
+    "docs/REFERENCE_PROFILES_VI.md",
+    "docs/NEW_DESIGN_V13_VI.md",
+    "docs/PROJECT_WORKFLOW_V14_VI.md",
+    "examples/building_fourteen_stages.json",
+    "examples/stu4_reference_job.json",
+    "VERSION.txt"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "*"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test tests_node/*.test.cjs",
+    "verify:bundle": "node scripts/verify-bundle.cjs",
+    "setup:python": "node scripts/launch-mcp.cjs --check"
+  },
+  "license": "UNLICENSED"
+}

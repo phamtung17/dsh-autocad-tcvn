@@ -1,0 +1,18 @@
+{
+  "package": "@phamtung17/dsh-autocad-tcvn",
+  "version": "1.1.2",
+  "checks": {
+    "python_offline": "92 passed, 2 skipped",
+    "node_bundle": "6 passed",
+    "yaml_patch": "parsed, 3 insert rows",
+    "npm_pack": "required bundle, MCP and skill files included",
+    "stdout_failure_path": "empty stdout; stderr diagnostics"
+  },
+  "not_executed": [
+    "Real DeepSeek Harness Web Git installation",
+    "Windows AutoCAD 2025 COM integration",
+    "First-run Windows Python environment bootstrap",
+    "End-to-end MCP tool discovery"
+  ],
+  "github_repo_modified": false
+}

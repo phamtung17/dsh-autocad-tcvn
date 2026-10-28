@@ -1,0 +1,17 @@
+{
+  "version": "1.1.0",
+  "generated_utc": "2026-10-27T17:42:53.009839+00:00",
+  "commit_sha": "UNAVAILABLE_UNCOMMITTED",
+  "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "python": "3.13.5",
+  "offline_test_command": "/opt/pyvenv/bin/python -m pytest tests -q -m not autocad_real and not mcp_live --disable-warnings",
+  "returncode": 0,
+  "offline_test_status": "PASS",
+  "pytest_tail": "........................................................................ [ 78%]\n....................                                                     [100%]\n92 passed, 2 deselected in 1.05s\n",
+  "mcp_stdio_live": "NOT_RUN_BY_OFFLINE_REPORT",
+  "dsh_web_live": "NOT_EXECUTED",
+  "autocad_2025_real": "NOT_EXECUTED",
+  "autocad_pdf_plot_real": "NOT_EXECUTED",
+  "tcvn_clause_source_authenticity": "NOT_INDEPENDENTLY_VERIFIED",
+  "tcvn_compliance": "NOT_CERTIFIED"
+}

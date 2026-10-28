@@ -1,0 +1,107 @@
+{
+  "version": "1.1.3-local",
+  "tested_at": "2026-10-28T09:21:07.084652+07:00",
+  "upstream": "https://github.com/phamtung17/dsh-autocad-TCVN",
+  "base_commit": "61289b8f126db9e99d47daf2c3e2645e1dd3a480",
+  "local_changes": true,
+  "python_tests": {
+    "passed": 98,
+    "skipped": 1,
+    "failed": 0,
+    "command": ".venv/Scripts/python.exe -m pytest tests -q --basetemp=output/tests_final_02 --tb=short"
+  },
+  "node_tests": {
+    "passed": 6,
+    "failed": 0
+  },
+  "dependency_check": "pip check: no broken requirements",
+  "mcp": {
+    "registered_server": "dsh_autocad_tcvn",
+    "tools_exercised": 14,
+    "probe": {
+      "status": "CONNECTED",
+      "version": "25.0s (LMS Tech)",
+      "name": "AutoCAD"
+    },
+    "unapproved_creation": "REJECTED"
+  },
+  "native_regression": {
+    "status": "REAL_AUTOCAD_2025_REGRESSION_PASS_REQUIRES_VISUAL_REVIEW",
+    "cad_version": "25.0s (LMS Tech)",
+    "dwg": "E:\\0.codex\\dsh-autocad-TCVN\\output\\native\\INTEGRATION_2025_8a594e0d578f.dwg",
+    "entity_types": {
+      "AcDbPolyline": 1,
+      "AcDbCircle": 1,
+      "AcDbLine": 2,
+      "AcDbAlignedDimension": 2,
+      "AcDbDiametricDimension": 1,
+      "AcDbBlockReference": 1
+    },
+    "dimension_measurements": [
+      200.0,
+      100.00000000000003,
+      26.000000000000014
+    ],
+    "circle_radii": [
+      13.0
+    ],
+    "block_names": [
+      "TEST_MARK"
+    ],
+    "pdf": "E:\\0.codex\\dsh-autocad-TCVN\\output\\native\\INTEGRATION_2025_8a594e0d578f.pdf",
+    "pdf_page_count": 1,
+    "tcvn_compliance": "NOT_CHECKED",
+    "note": "Script confirmed sampled CAD geometry after reopening. Engineer must still review dimension placement, layout, fonts, lineweights, print scale and TCVN."
+  },
+  "drawing": {
+    "status": "NATIVE_DEMO_VERIFIED",
+    "dwg": "E:\\0.codex\\dsh-autocad-TCVN\\output\\demo\\PLATE_DEMO_14fbbdb2.dwg",
+    "dxf": "E:\\0.codex\\dsh-autocad-TCVN\\output\\demo\\PLATE_DEMO_14fbbdb2_verified_b24c21.dxf",
+    "pdf": "E:\\0.codex\\dsh-autocad-TCVN\\output\\demo\\PLATE_DEMO_14fbbdb2.pdf",
+    "entity_types": {
+      "LWPOLYLINE": 3,
+      "CIRCLE": 5,
+      "LINE": 22,
+      "DIMENSION": 11,
+      "TEXT": 9
+    },
+    "circle_radii_mm": [
+      4.5,
+      4.5,
+      4.5,
+      4.5,
+      13.0
+    ],
+    "dimension_measurements_mm": [
+      12.0,
+      12.0,
+      20.0,
+      20.0,
+      20.0,
+      20.0,
+      26.0,
+      60.0,
+      100.0,
+      160.0,
+      200.0
+    ],
+    "viewport_scale": 1.0,
+    "viewport_center": [
+      152.5,
+      23.825,
+      0.0
+    ],
+    "pdf_page_mm": [
+      420.16,
+      297.04
+    ],
+    "pdf_200mm_edge_checked": true,
+    "dxf_audit_errors": 0,
+    "tcvn_compliance": "NOT_CHECKED",
+    "visual_review": "review FINAL_PREVIEW.png"
+  },
+  "visual_review": "FINAL_PREVIEW.png inspected: complete frame, three views, readable Vietnamese, no text/side-view overlap",
+  "dsh_web_activation": "NOT_TESTED",
+  "tcvn_compliance": "NOT_CHECKED",
+  "new_codex_session_required_to_load_server": true
+}
