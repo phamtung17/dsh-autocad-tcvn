@@ -1,0 +1,14 @@
+{
+  "discipline": "mechanical", "purpose": "design_review", "units": "mm",
+  "output_name": "plate_200x100.dwg",
+  "sheet": {"format": "A3", "orientation": "landscape", "scale_denominator": 1},
+  "standards": ["TCVN 7285:2003"],
+  "geometry": [
+    {"id":"outline","type":"polyline","layer":"M-OUTLINE","closed":true,"points":[[0,0],[200,0],[200,100],[0,100]]},
+    {"id":"hole","type":"circle","layer":"M-HOLE","center":[100,50],"radius":15},
+    {"id":"top","type":"dim_aligned","layer":"M-DIM","start":[0,100],"end":[200,100],"position":[100,120]},
+    {"id":"right","type":"dim_aligned","layer":"M-DIM","start":[200,0],"end":[200,100],"position":[220,50]},
+    {"id":"hole_dim","type":"dim_diametric","layer":"M-DIM","center":[100,50],"radius":15,"angle":30,"leader":10},
+    {"id":"note","type":"text","layer":"M-ANNO","position":[0,-30],"text":"SCHEMATIC - REVIEW REQUIRED","height":5,"rotation":0}
+  ]
+}

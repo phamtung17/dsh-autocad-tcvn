@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.1",
+  "jurisdiction": "VN",
+  "verification_date": "REVALIDATE_PER_PROJECT",
+  "policy": "Catalog leads from v4.0. Effective dates, amendments, exact titles and clauses are NOT verified for this release. Do not claim TCVN compliance.",
+  "standards": [
+    {
+      "id": "TCVN 7285:2003",
+      "discipline": [
+        "all"
+      ],
+      "topic": "sheet sizes and layouts",
+      "catalog_status": "REQUIRES_CURRENT_OFFICIAL_VERIFICATION",
+      "source": "https://tieuchuan.vsqi.gov.vn/tieuchuan/view?sohieu=TCVN+7285%3A2003",
+      "rule_status": "metadata_only"
+    },
+    {
+      "id": "TCVN 7286:2003",
+      "discipline": [
+        "all"
+      ],
+      "topic": "drawing scales",
+      "catalog_status": "REQUIRES_CURRENT_OFFICIAL_VERIFICATION",
+      "source": "https://tieuchuan.vsqi.gov.vn/tieuchuan/view?sohieu=TCVN+7286%3A2003",
+      "rule_status": "metadata_only"
+    },
+    {
+      "id": "TCVN 8-20:2002",
+      "discipline": [
+        "all"
+      ],
+      "topic": "line conventions",
+      "catalog_status": "REQUIRES_CURRENT_OFFICIAL_VERIFICATION",
+      "source": "https://tieuchuan.vsqi.gov.vn/tieuchuan/view?sohieu=TCVN+8-20%3A2002",
+      "rule_status": "metadata_only"
+    },
+    {
+      "id": "TCVN 7583-1:2006",
+      "discipline": [
+        "all"
+      ],
+      "topic": "dimensions and tolerances",
+      "catalog_status": "REQUIRES_CURRENT_OFFICIAL_VERIFICATION",
+      "source": "https://tieuchuan.vsqi.gov.vn/tieuchuan/view?sohieu=TCVN+7583-1%3A2006",
+      "rule_status": "metadata_only"
+    },
+    {
+      "id": "TCVN 8-44:2003",
+      "discipline": [
+        "mechanical"
+      ],
+      "topic": "mechanical sections",
+      "catalog_status": "REQUIRES_CURRENT_OFFICIAL_VERIFICATION",
+      "source": "https://tieuchuan.vsqi.gov.vn/tim-kiem?ic%5B0%5D=01.100&page=4",
+      "rule_status": "metadata_only"
+    },
+    {
+      "id": "TCVN 6084:2012",
+      "discipline": [
+        "structural"
+      ],
+      "topic": "simplified reinforcement drawings",
+      "catalog_status": "REQUIRES_CURRENT_OFFICIAL_VERIFICATION",
+      "source": "https://tieuchuan.vsqi.gov.vn/tim-kiem?si=TCVN+6084",
+      "rule_status": "metadata_only"
+    },
+    {
+      "id": "TCVN 6085:2012",
+      "discipline": [
+        "structural"
+      ],
+      "topic": "precast construction drawings",
+      "catalog_status": "REQUIRES_CURRENT_OFFICIAL_VERIFICATION",
+      "source": "https://tieuchuan.vsqi.gov.vn/tieuchuan/view?sohieu=TCVN+6085%3A2012",
+      "rule_status": "metadata_only"
+    },
+    {
+      "id": "TCVN 5574:2018",
+      "discipline": [
+        "structural"
+      ],
+      "topic": "concrete and reinforced concrete design",
+      "catalog_status": "REQUIRES_CURRENT_OFFICIAL_VERIFICATION",
+      "source": "https://tieuchuan.vsqi.gov.vn/tieuchuan/view?sohieu=TCVN+5574%3A2018",
+      "rule_status": "engineering_review_required"
+    },
+    {
+      "id": "TCVN 2737:2023",
+      "discipline": [
+        "structural",
+        "architectural"
+      ],
+      "topic": "loads and actions",
+      "catalog_status": "REQUIRES_CURRENT_OFFICIAL_VERIFICATION",
+      "source": "https://tieuchuan.vsqi.gov.vn/tim-kiem?si=TCVN+2737",
+      "rule_status": "engineering_review_required"
+    },
+    {
+      "id": "TCVN 7447 (applicable part/year)",
+      "discipline": [
+        "electrical"
+      ],
+      "topic": "low-voltage electrical installations",
+      "catalog_status": "REQUIRES_CURRENT_OFFICIAL_VERIFICATION",
+      "source": "https://tieuchuan.vsqi.gov.vn/tim-kiem?si=TCVN+7447",
+      "rule_status": "engineering_review_required"
+    },
+    {
+      "id": "QCVN 06:2022/BXD (check amendments and applicability)",
+      "discipline": [
+        "architectural",
+        "structural",
+        "mep",
+        "fire_safety"
+      ],
+      "topic": "fire safety for buildings",
+      "catalog_status": "REQUIRES_CURRENT_OFFICIAL_VERIFICATION",
+      "source": "https://vanban.chinhphu.vn/?classid=1&docid=207059&pageid=27160&typegroupid=6",
+      "rule_status": "regulatory_review_required"
+    }
+  ]
+}

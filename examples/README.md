@@ -1,0 +1,1 @@
+`plate_job.json`: plate 200x100mm with hole D30; no material, GD&T, heat treatment, or verified TCVN clause. Cannot be marked manufacture-ready. Use `cad_validate`, `cad_preview`, `cad_prepare`, then a human approval in PowerShell before `cad_create_dwg`.

@@ -1,0 +1,300 @@
+{
+  "spec": {
+    "engine": "building_v1",
+    "project_id": "boyxpxt_building_demo",
+    "project_name": "NHÀ Ở / HỒ SƠ ĐA BỘ MÔN DEMO",
+    "mode": "demo",
+    "revision": "A",
+    "units": "mm",
+    "source": {
+      "survey": "DEMO / không phải khảo sát thực địa",
+      "structural": "DEMO / chưa có tính toán kỹ sư",
+      "mep": "DEMO / chưa tính tải và thủy lực",
+      "prices": "DEMO / đơn giá minh họa"
+    },
+    "site": {
+      "width": 15000,
+      "depth": 18000,
+      "building_origin": [
+        3000,
+        4000
+      ],
+      "north_degrees": 0,
+      "datum": "MỐC DEMO ±0.000",
+      "survey_points": [
+        [
+          0,
+          0,
+          -150
+        ],
+        [
+          15000,
+          0,
+          -120
+        ],
+        [
+          15000,
+          18000,
+          100
+        ],
+        [
+          0,
+          18000,
+          80
+        ]
+      ],
+      "road_width": 5000,
+      "paving_thickness": 80
+    },
+    "building": {
+      "width": 9000,
+      "depth": 8000,
+      "wall": 150,
+      "levels": [
+        0,
+        3300,
+        6600
+      ],
+      "grids_x": [
+        0,
+        4500,
+        9000
+      ],
+      "grids_y": [
+        0,
+        4000,
+        8000
+      ],
+      "door_width": 900,
+      "door_height": 2200,
+      "window_width": 1800,
+      "window_sill": 900,
+      "window_height": 1400,
+      "stair_width": 1100,
+      "stair_run": 280,
+      "stair_risers": 20,
+      "stair_origin": [
+        5000,
+        4100
+      ],
+      "roof_overhang": 400,
+      "roof_slope": 0.02,
+      "parapet_height": 900
+    },
+    "structure": {
+      "foundation_width": 1600,
+      "foundation_depth": 450,
+      "foundation_bottom": -1600,
+      "blinding": 100,
+      "column_width": 250,
+      "column_depth": 250,
+      "beam_width": 220,
+      "beam_depth": 450,
+      "slab_thickness": 120,
+      "cover": 35,
+      "main_bar_diameter": 18,
+      "column_bars": 8,
+      "stirrup_diameter": 8,
+      "stirrup_spacing": 150,
+      "footing_bar_diameter": 12,
+      "footing_bar_spacing": 150
+    },
+    "finishes": {
+      "tile": 10,
+      "screed": 40,
+      "waterproofing": 3,
+      "gypsum": 12.5,
+      "ceiling_drop": 350,
+      "skirting": 100,
+      "cabinet_length": 2400,
+      "cabinet_depth": 600,
+      "cabinet_height": 900,
+      "panel": 18,
+      "counter": 30
+    },
+    "systems": {
+      "water_diameter": 25,
+      "waste_diameter": 110,
+      "drain_slope": 0.02,
+      "water_pressure_kpa": 200,
+      "routes": [
+        {
+          "id": "CW01",
+          "system": "water",
+          "points": [
+            [
+              8000,
+              500,
+              500
+            ],
+            [
+              8000,
+              3000,
+              500
+            ],
+            [
+              7500,
+              3000,
+              500
+            ]
+          ],
+          "diameter": 25
+        },
+        {
+          "id": "SW01",
+          "system": "waste",
+          "points": [
+            [
+              7500,
+              3000,
+              -200
+            ],
+            [
+              8000,
+              3000,
+              -210
+            ],
+            [
+              8000,
+              500,
+              -260
+            ]
+          ],
+          "diameter": 110
+        },
+        {
+          "id": "EL01",
+          "system": "power",
+          "points": [
+            [
+              500,
+              500,
+              2600
+            ],
+            [
+              500,
+              3000,
+              2600
+            ],
+            [
+              3500,
+              3000,
+              2600
+            ]
+          ],
+          "diameter": 20
+        },
+        {
+          "id": "LV01",
+          "system": "data",
+          "points": [
+            [
+              1000,
+              500,
+              2400
+            ],
+            [
+              1000,
+              2500,
+              2400
+            ],
+            [
+              3500,
+              2500,
+              2400
+            ]
+          ],
+          "diameter": 20
+        },
+        {
+          "id": "AC01",
+          "system": "hvac",
+          "points": [
+            [
+              500,
+              7000,
+              2800
+            ],
+            [
+              3500,
+              7000,
+              2800
+            ]
+          ],
+          "diameter": 200
+        }
+      ],
+      "circuits": [
+        {
+          "id": "C01",
+          "use": "Chiếu sáng",
+          "power_w": 600,
+          "voltage": 230,
+          "breaker_a": 10,
+          "cable_mm2": 1.5
+        },
+        {
+          "id": "C02",
+          "use": "Ổ cắm",
+          "power_w": 2500,
+          "voltage": 230,
+          "breaker_a": 20,
+          "cable_mm2": 2.5
+        },
+        {
+          "id": "C03",
+          "use": "Điều hòa",
+          "power_w": 1800,
+          "voltage": 230,
+          "breaker_a": 20,
+          "cable_mm2": 2.5
+        }
+      ],
+      "fixtures_per_floor": {
+        "lights": 6,
+        "sockets": 6,
+        "wc": 1,
+        "basin": 1,
+        "shower": 1,
+        "data": 2,
+        "camera": 1,
+        "ac": 1
+      },
+      "earthing_resistance_target_ohm": 4,
+      "inspection_chamber_size": 600
+    },
+    "prices": {
+      "slab_concrete": 1500000,
+      "column_concrete": 1700000,
+      "beam_concrete": 1700000,
+      "foundation_concrete": 1500000,
+      "floor_finish": 350000,
+      "roof_waterproof": 180000,
+      "water_pipe": 65000,
+      "waste_pipe": 180000,
+      "power_conduit": 25000,
+      "data_conduit": 28000,
+      "light": 350000,
+      "socket": 120000,
+      "wc": 3500000,
+      "basin": 1500000,
+      "cabinet": 3200000,
+      "paving": 280000
+    },
+    "estimate_scope": {
+      "coverage_note": "Khối lượng các hạng mục đã dựng trong mô hình demo",
+      "excluded_items": [
+        "Cốt thép tổng hợp, xây trát, cửa và hạng mục chưa mô hình hóa",
+        "Nhân công, chi phí chung, thuế"
+      ],
+      "additional_items": [],
+      "scope_confirmed": false
+    },
+    "reviews": {},
+    "issues": []
+  },
+  "branding": {
+    "company": "boyxpxt.io.vn",
+    "project_code": "BXP-HOUSE"
+  }
+}

@@ -1,0 +1,28 @@
+# DeepSeek Harness profile overlay. Start with:
+# npx @deepseek-ai/dsh --profile web --patch C:\CAD_DSH_Agent\install\dsh-mcp-client.example.yml
+# Edit cwd to your actual extraction location first; safer: use install/install.ps1 to generate it.
+- id: mcp-autocad-engineering
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: cad_engineering
+    transport: stdio
+    command: python
+    args: ['-m', 'autocad_agent.mcp_server']
+    cwd: 'C:/CAD_DSH_Agent'
+    env:
+      CAD_OUTPUT_DIR: 'C:/CAD_DSH_OUTPUT'
+      CAD_DWT_DIR: 'C:/CAD_DWT_Templates'
+      CAD_RULES_DIR: 'C:/CAD_DSH_Agent/standards/verified_rules'
+      CAD_APPROVAL_MODE: 'manual'
+    toolCallTimeoutMs: 180000
+    failOnStartupError: true
+
+# Requires existing dsh-skill registry + model-facing skill tool in the DSH Web profile.
+# Two roots are essential: provider does NOT recursively discover nested SKILL.md files.
+- id: autocad-skill-filesystem
+  name: '@deepseek-ai/dsh-skill-filesystem'
+  config:
+    providerName: autocad-engineering-local
+    customSkillDirs:
+      - 'C:/CAD_DSH_Agent/skills'
+      - 'C:/CAD_DSH_Agent/skills/disciplines'

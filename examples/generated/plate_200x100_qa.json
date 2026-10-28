@@ -1,0 +1,74 @@
+{
+  "geometry_qa": {
+    "status": "GEOMETRY_CHECKED",
+    "units": "mm",
+    "entity_count": 6,
+    "by_type": {
+      "polyline": 1,
+      "circle": 1,
+      "dim_aligned": 2,
+      "dim_diametric": 1,
+      "text": 1
+    },
+    "bounds": [
+      0.0,
+      -30.0,
+      220.0,
+      120.0
+    ],
+    "measurements": [
+      {
+        "id": "hole",
+        "radius": 15.0,
+        "diameter": 30.0
+      },
+      {
+        "id": "top",
+        "measured_distance": 200.0
+      },
+      {
+        "id": "right",
+        "measured_distance": 100.0
+      }
+    ],
+    "findings": [],
+    "tcvn_compliance": "NOT_CHECKED"
+  },
+  "standards": {
+    "drawing": "plate_200x100.dwg",
+    "discipline": "mechanical",
+    "standard_checks": [
+      {
+        "id": "TCVN 7285:2003",
+        "catalog_status": "RECHECK_OFFICIAL",
+        "applicability": "POTENTIALLY_APPLICABLE",
+        "source": "https://tieuchuan.vsqi.gov.vn/tieuchuan/view?sohieu=TCVN+7285%3A2003",
+        "clause_check": "NOT_CHECKED",
+        "blocking": "VERIFY_LATEST_EDITION_AND_CLAUSES"
+      }
+    ],
+    "overall": "NOT_CHECKED",
+    "missing_standards": false,
+    "note": "No full norm text or clause-level verified rules. This screening must not be reported as compliance."
+  },
+  "dxf": {
+    "status": "DXF_CREATED",
+    "file": "examples/generated/plate_200x100_example.dxf",
+    "entities": 6,
+    "audit_errors": 0,
+    "audit_fixes": 0,
+    "tcvn_compliance": "NOT_CHECKED"
+  },
+  "pdf": {
+    "status": "PDF_PREVIEW_CREATED",
+    "file": "examples/generated/plate_200x100_preview.pdf",
+    "pages": 1,
+    "page_size_mm": [
+      420.0,
+      297.0
+    ],
+    "scale_is_verified": false,
+    "tcvn_compliance": "NOT_CHECKED",
+    "note": "Auto-fit schematic; this PDF is NOT a scale-accurate AutoCAD plot."
+  }
+}

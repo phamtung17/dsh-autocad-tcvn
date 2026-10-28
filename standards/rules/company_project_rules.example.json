@@ -1,0 +1,10 @@
+{
+  "kind": "PROJECT_RULE",
+  "project_id": "EXAMPLE-MECHANICAL-PLATE",
+  "disclaimer": "Company/project illustration only. NOT an extracted TCVN standard clause.",
+  "checks": [
+    {"type": "required_layers", "layers": ["M-OUTLINE", "M-HOLE", "M-DIM"]},
+    {"type": "min_circle_radius", "value": 2.0},
+    {"type": "max_extent", "value": 10000.0}
+  ]
+}

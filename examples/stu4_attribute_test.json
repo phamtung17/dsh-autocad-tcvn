@@ -1,0 +1,14 @@
+{
+  "profile_id": "stu4_fitout_v12",
+  "project_id": "stu4_attribute_verified_v12",
+  "sheet_ids": [
+    "s007"
+  ],
+  "require_complete": false,
+  "accept_font_substitution": true,
+  "attributes": {
+    "s007": {
+      "FIT-OUT": "FIT-OUT STU4 V12"
+    }
+  }
+}

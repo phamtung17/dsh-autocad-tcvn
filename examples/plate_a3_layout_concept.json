@@ -1,0 +1,132 @@
+{
+  "discipline": "mechanical",
+  "units": "mm",
+  "output_name": "plate_a3_layout_200x100.dwg",
+  "purpose": "concept_only",
+  "sheet": {
+    "format": "A3",
+    "orientation": "landscape",
+    "scale_denominator": 1
+  },
+  "geometry": [
+    {
+      "id": "e0001",
+      "type": "polyline",
+      "layer": "M-OUTLINE",
+      "points": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          200.0,
+          0.0
+        ],
+        [
+          200.0,
+          100.0
+        ],
+        [
+          0.0,
+          100.0
+        ]
+      ],
+      "closed": true
+    },
+    {
+      "id": "e0002",
+      "type": "circle",
+      "layer": "M-HOLE",
+      "center": [
+        100.0,
+        50.0
+      ],
+      "radius": 13.0
+    },
+    {
+      "id": "e0003",
+      "type": "line",
+      "layer": "M-CENTER",
+      "start": [
+        100.0,
+        -12.0
+      ],
+      "end": [
+        100.0,
+        112.00000000000001
+      ]
+    },
+    {
+      "id": "e0004",
+      "type": "line",
+      "layer": "M-CENTER",
+      "start": [
+        -24.0,
+        50.0
+      ],
+      "end": [
+        224.00000000000003,
+        50.0
+      ]
+    },
+    {
+      "id": "e0005",
+      "type": "dim_aligned",
+      "layer": "M-DIM",
+      "start": [
+        0.0,
+        0.0
+      ],
+      "end": [
+        200.0,
+        0.0
+      ],
+      "position": [
+        100.0,
+        -18.0
+      ]
+    },
+    {
+      "id": "e0006",
+      "type": "dim_aligned",
+      "layer": "M-DIM",
+      "start": [
+        200.0,
+        0.0
+      ],
+      "end": [
+        200.0,
+        100.0
+      ],
+      "position": [
+        236.0,
+        50.0
+      ]
+    },
+    {
+      "id": "e0007",
+      "type": "dim_diametric",
+      "layer": "M-DIM",
+      "center": [
+        100.0,
+        50.0
+      ],
+      "radius": 13.0,
+      "angle": 45.0,
+      "leader": 12.0
+    }
+  ],
+  "standards": [],
+  "assumptions": [
+    "Conceptual schematic only; no verified sizing, loads, clearances or TCVN clauses."
+  ],
+  "blocks": [],
+  "plot": {
+    "enabled": true,
+    "pdf": true,
+    "dwt": null,
+    "ctb": null
+  },
+  "engineering_inputs": {},
+  "clause_rule_packs": []
+}

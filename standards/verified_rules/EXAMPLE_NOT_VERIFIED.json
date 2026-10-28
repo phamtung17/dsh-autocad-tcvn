@@ -1,0 +1,20 @@
+{
+  "kind": "TCVN_CLAUSE_RULEPACK",
+  "standard": {
+    "id": "TCVN 7285:2003",
+    "edition": "2003",
+    "source_title": "EXAMPLE ONLY — replace with legal document title and verify",
+    "source_sha256": "",
+    "reviewed_by": "",
+    "reviewed_at": ""
+  },
+  "rules": [{
+    "id": "EXAMPLE-SHEET-A3",
+    "clause": "NOT VERIFIED",
+    "type": "sheet_format",
+    "expected": "A3",
+    "method": "Compare declared project sheet format against reviewer-confirmed clause requirement",
+    "reviewed_by": "",
+    "attested": false
+  }]
+}
