@@ -34,7 +34,8 @@ def create_dwg(job,home):
     pythoncom.CoInitialize()
     doc=None
     try:
-        app=retry(lambda:win32com.client.GetActiveObject('AutoCAD.Application'))
+        from .autocad_session import connect
+        app=connect()
         # Generate type-library wrappers: late-bound Documents.Add can otherwise
         # return a generic object without SetVariable on real AutoCAD 2025.
         app=retry(lambda:win32com.client.gencache.EnsureDispatch(app))

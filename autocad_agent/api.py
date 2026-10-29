@@ -14,13 +14,22 @@ from .runtime import workspace,prepare,consume,read_pending,atomic_json,DIGEST_R
 ROOT=Path(__file__).resolve().parents[1]
 
 def capabilities():
-    return {'plugin':'DSH AutoCAD Engineering Agent','version':'1.4.0-local',
+    return {'plugin':'DSH AutoCAD Engineering Agent','version':'1.7.0-local',
+            'spatial_validation':['unique hosted wall openings, synchronized wall outline/hatch cuts','hinge/axis/swing collision checks',
+                                  'full object footprints versus walls and reserved voids','room free-space connectivity',
+                                  'room-label placement inside local zones','blocking prepare/export for modeled spatial errors'],
+            'live_drawing':{'default':True,'mode':'REAL_NATIVE_ENTITY_CREATION','batch_limit':12,'progress_tool':'cad_project_progress','visible_progress':'AutoCAD command line and incremental model regeneration'},
+            'native_project_output':'One PROJECT.dwg, all disciplines together in Model plus named layouts; visible AutoCAD stays open in Model',
+            'pdf_policy':'OFF by default for drawing generation and preview. Only export after explicit user PDF request.',
+            'explicit_building_extensions':['9..30m × 7..30m rectangular envelope','placed per-floor fixtures/devices/rooms/partitions/openings/furniture',
+                                            'up to 24 supplied circuits with referenced power routes','equal-slope four-sided hip roof',
+                                            'pool site footprint and elevator shaft reservation (engineering not implemented)'],
             'target':'Autodesk AutoCAD 2025 English on Windows',
             'tools':['cad_capabilities','cad_template','cad_validate','cad_preview','cad_prepare','cad_create_dwg','cad_audit_dxf','cad_catalog','cad_check_project_rules','cad_screen_standards','cad_probe_autocad','cad_quality_gate','cad_check_clause_rules','cad_plot_plan',
                      'cad_reference_profiles','cad_reference_profile','cad_reference_plan','cad_reference_prepare','cad_reference_export',
                      'cad_fitout_example','cad_fitout_plan','cad_fitout_preview','cad_fitout_prepare','cad_fitout_export','cad_brand_assets',
                      'cad_project_catalog','cad_project_example','cad_project_plan','cad_project_check','cad_project_change_impact',
-                     'cad_project_preview','cad_project_prepare','cad_project_export','cad_project_verify_delivery'],
+                     'cad_project_preview','cad_project_prepare','cad_project_export','cad_project_verify_delivery','cad_project_progress'],
             'fourteen_stage_building':['1-3 storey rectangular house template with explicit survey and engineering inputs',
                                       'per-floor architectural/structural/MEP/interior/ceiling coverage',
                                       'four elevations, sections, roof and enlarged construction details',
@@ -67,7 +76,7 @@ def validate(job,project_rules=None):
         result['project_rules']=check_project_rules(normalized,project_rules)
     return result
 
-def preview(job):
+def preview(job,export_pdf=False):
     normalized=validate_job(job)
     qa=geometry_report(normalized)
     if qa['status']!='GEOMETRY_CHECKED':return {'status':'BLOCKED_BY_GEOMETRY','qa':qa}
@@ -75,7 +84,7 @@ def preview(job):
     stem=Path(normalized['output_name']).stem+'_'+fingerprint(normalized)[:12]
     target=workspace()/'previews'
     dxf=export_dxf(normalized,target/(stem+'.dxf'))
-    pdf=export_pdf_preview(normalized,target/(stem+'.pdf'))
+    pdf=export_pdf_preview(normalized,target/(stem+'.pdf')) if export_pdf else None
     from .standards_engine import screen_standards
     from .discipline_review import review
     standards_manifest=screen_standards(normalized)
@@ -107,7 +116,8 @@ def audit_dxf(filename):
     path=workspace()/'previews'/filename
     if not path.is_file():raise FileNotFoundError('preview DXF not found')
     doc=readfile(str(path));audit=doc.audit();msp=doc.modelspace()
-    return {'file':str(path),'audit_errors':len(audit.errors),'audit_fixes':len(audit.fixes),
+    from .dxf_spatial_audit import audit_document
+    return {'file':str(path),'audit_errors':len(audit.errors),'audit_fixes':len(audit.fixes),'spatial_audit':audit_document(doc),
             'entities':len(msp),'status':'PASS_STRUCTURE' if not audit.errors else 'FAIL_STRUCTURE',
             'tcvn_compliance':'NOT_CHECKED'}
 

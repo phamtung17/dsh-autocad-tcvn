@@ -12,7 +12,12 @@ from .runtime import prepare
 
 mcp=FastMCP('autocad_engineering',instructions=(
     'For a complete building dossier use cad_project_catalog/example/plan/check/preview/change_impact/prepare/export/verify_delivery. '
+    'User preference: ONE DWG for the complete project, all disciplines in Model and named layouts. NEVER split per-sheet drawing files. '
+    'New project/fitout native export opens visible AutoCAD and creates Model entities in live batches. Use cad_project_progress to report actual sheet/stage/layer/count and heartbeat; never invent progress. Prepare/preview remain offline. '
+    'PDF is OFF by default, including previews. Only enable export_pdf after the user explicitly asks for PDF. '
     'All 14 stages and every modeled floor must be present. Never equate sheet completeness or clash checks with engineering approval. '
+    'Wall/opening spatial rules are mandatory: every opening needs a unique host; synchronize outline/hatch cuts, validate swing/footprints and room reachability. '
+    'Resolve spatial_rules findings before prepare/export. Never invent a host or relocate ambiguous legacy doors to force a pass. '
     'For NEW detailed studio drawings use cad_fitout_example, cad_fitout_plan, cad_fitout_preview, cad_fitout_prepare, cad_fitout_export. '
     'Use user-supplied project dimensions. Default boyxpxt.io.vn is temporary; ask title block and logo before real project export. '
     'For conceptual geometry jobs ALWAYS call cad_validate and cad_preview first. '
@@ -43,9 +48,9 @@ def cad_validate(job:dict, project_rules:dict|None=None) -> dict:
     return api.validate(job,project_rules)
 
 @mcp.tool()
-def cad_preview(job:dict) -> dict:
-    """Generate a real DXF and a schematic, NOT-TO-SCALE PDF for review, plus QA report. AutoCAD not needed."""
-    return api.preview(job)
+def cad_preview(job:dict,export_pdf:bool=False) -> dict:
+    """Generate a DXF for review. Only request optional schematic PDF after the user explicitly asks for PDF."""
+    return api.preview(job,export_pdf)
 
 @mcp.tool()
 def cad_prepare(job:dict) -> dict:
@@ -150,22 +155,23 @@ def cad_fitout_plan(spec:dict,branding:dict|None=None)->dict:
     return plan(spec,branding)
 
 @mcp.tool()
-def cad_fitout_preview(spec:dict,branding:dict|None=None)->dict:
-    """Create 11-sheet vector PDF/DXF preview of a NEW studio. Review before native export."""
+def cad_fitout_preview(spec:dict,branding:dict|None=None,export_pdf:bool=False)->dict:
+    """Preview ONE combined DXF. PDF is OFF unless the user explicitly requests export_pdf=true."""
     from .design_api import preview
-    return preview(spec,branding)
+    return preview(spec,branding,export_pdf)
 
 @mcp.tool()
-def cad_fitout_prepare(spec:dict,branding:dict|None=None)->dict:
+def cad_fitout_prepare(spec:dict,branding:dict|None=None,export_pdf:bool=False)->dict:
     """Freeze NEW design and logo hashes for one-use human approval. Ask real-project branding before confirmed=true."""
     from .design_runtime import prepare_design
-    return prepare_design(spec,branding)
+    return prepare_design(spec,branding,export_pdf)
 
 @mcp.tool()
-def cad_fitout_export(ticket:str)->dict:
+async def cad_fitout_export(ticket:str)->dict:
     """Native NEW DWG/PDF set with real dimensions/hatches/tables, after CLI approval."""
     from .design_runtime import export_design
-    return export_design(ticket)
+    import asyncio
+    return await asyncio.to_thread(export_design,ticket)
 
 @mcp.tool()
 def cad_brand_assets()->dict:
@@ -180,8 +186,14 @@ def cad_project_catalog()->dict:
     return catalog()
 
 @mcp.tool()
-def cad_project_example()->dict:
-    """Explicit two-storey DEMO data for the 14-stage building generator. Not surveyed/engineered project data."""
+def cad_project_example(template:str='house')->dict:
+    """DEMO schema: house or villa_18x17 (placed rooms, four WCs, eight AC units, hip roof, pool footprint, lift reservation). Never use demo engineering values as real design data."""
+    if template=='villa_18x17':
+        import json
+        from pathlib import Path
+        data=json.loads((Path(__file__).resolve().parents[1]/'examples/villa_18x17_explicit_demo.json').read_text(encoding='utf-8'))
+        return {'spec':data['spec'],'branding':data['branding'],'purpose':'DEMO / explicit layout and engineering inputs need project review','temporary_brand':'boyxpxt.io.vn'}
+    if template!='house':raise ValueError('template must be house or villa_18x17')
     from .building_model import example
     return {'spec':example(),'purpose':'DEMO / all engineering values illustrative','temporary_brand':'boyxpxt.io.vn'}
 
@@ -204,22 +216,29 @@ def cad_project_change_impact(before:dict,after:dict)->dict:
     return change_impact(before,after)
 
 @mcp.tool()
-def cad_project_preview(spec:dict,branding:dict|None=None)->dict:
-    """Create multi-discipline 14-stage vector PDF/DXF review package; not native AutoCAD verification."""
+def cad_project_preview(spec:dict,branding:dict|None=None,export_pdf:bool=False)->dict:
+    """Preview all disciplines in ONE DXF. Do not enable PDF unless the user explicitly requests it."""
     from .project_api import preview
-    return preview(spec,branding)
+    return preview(spec,branding,export_pdf)
 
 @mcp.tool()
-def cad_project_prepare(spec:dict,branding:dict|None=None)->dict:
+def cad_project_prepare(spec:dict,branding:dict|None=None,export_pdf:bool=False)->dict:
     """Freeze model, implementation and branding hashes; blocks modeled errors and asks real-project branding."""
     from .project_api import prepare
-    return prepare(spec,branding)
+    return prepare(spec,branding,export_pdf)
 
 @mcp.tool()
-def cad_project_export(ticket:str)->dict:
-    """Export a new native multi-discipline DWG/PDF review set from an externally approved one-use ticket."""
+async def cad_project_export(ticket:str)->dict:
+    """Open visible AutoCAD and CREATE native entities in small live batches in ONE Model. Watch the command-line progress; cad_project_progress reads the heartbeat. PDF remains OFF unless frozen into the approved ticket."""
+    import asyncio
     from .design_runtime import export_design
-    return export_design(ticket)
+    return await asyncio.to_thread(export_design,ticket)
+
+@mcp.tool()
+def cad_project_progress(project_id:str)->dict:
+    """Read live sheet/stage/detail-layer, entity counts, drawing percent and heartbeat. Read-only; 100 percent drawing does not mean saving/verification completed. Does not start or approve a job."""
+    from .live_drawing import progress_status
+    return progress_status(project_id)
 
 @mcp.tool()
 def cad_project_verify_delivery(project_id:str)->dict:

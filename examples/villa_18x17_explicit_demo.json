@@ -1,0 +1,1500 @@
+{
+  "spec": {
+    "engine": "building_v1",
+    "project_id": "boyxpxt_villa_18x17_demo",
+    "project_name": "BIỆT THỰ 18 × 17 / DEMO ĐẦU VÀO",
+    "mode": "demo",
+    "revision": "A",
+    "units": "mm",
+    "source": {
+      "survey": "DEMO / không phải khảo sát thực địa",
+      "structural": "DEMO / chưa có tính toán kỹ sư",
+      "mep": "DEMO / chưa tính tải và thủy lực",
+      "prices": "DEMO / đơn giá minh họa"
+    },
+    "site": {
+      "width": 30000,
+      "depth": 40000,
+      "building_origin": [
+        6000,
+        6000
+      ],
+      "north_degrees": 0,
+      "datum": "MỐC DEMO ±0.000",
+      "survey_points": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          30000,
+          0,
+          0
+        ],
+        [
+          30000,
+          40000,
+          0
+        ],
+        [
+          0,
+          40000,
+          0
+        ]
+      ],
+      "road_width": 5000,
+      "paving_thickness": 80
+    },
+    "building": {
+      "width": 18000,
+      "depth": 17000,
+      "wall": 150,
+      "levels": [
+        0,
+        3900,
+        7800
+      ],
+      "grids_x": [
+        0,
+        6000,
+        12000,
+        18000
+      ],
+      "grids_y": [
+        0,
+        5500,
+        11000,
+        17000
+      ],
+      "door_width": 900,
+      "door_height": 2200,
+      "window_width": 1800,
+      "window_sill": 900,
+      "window_height": 1400,
+      "stair_width": 1100,
+      "stair_run": 280,
+      "stair_risers": 20,
+      "stair_origin": [
+        9000,
+        6000
+      ],
+      "roof_overhang": 600,
+      "roof_slope": 0.22,
+      "parapet_height": 900
+    },
+    "structure": {
+      "foundation_width": 1600,
+      "foundation_depth": 450,
+      "foundation_bottom": -1600,
+      "blinding": 100,
+      "column_width": 250,
+      "column_depth": 250,
+      "beam_width": 220,
+      "beam_depth": 450,
+      "slab_thickness": 120,
+      "cover": 35,
+      "main_bar_diameter": 18,
+      "column_bars": 8,
+      "stirrup_diameter": 8,
+      "stirrup_spacing": 150,
+      "footing_bar_diameter": 12,
+      "footing_bar_spacing": 150
+    },
+    "finishes": {
+      "tile": 10,
+      "screed": 40,
+      "waterproofing": 3,
+      "gypsum": 12.5,
+      "ceiling_drop": 900,
+      "skirting": 100,
+      "cabinet_length": 2400,
+      "cabinet_depth": 600,
+      "cabinet_height": 900,
+      "panel": 18,
+      "counter": 30
+    },
+    "systems": {
+      "water_diameter": 25,
+      "waste_diameter": 110,
+      "drain_slope": 0.02,
+      "water_pressure_kpa": 200,
+      "routes": [
+        {
+          "id": "CW01",
+          "system": "water",
+          "points": [
+            [
+              1000,
+              10000,
+              500
+            ],
+            [
+              17000,
+              10000,
+              500
+            ]
+          ],
+          "diameter": 25
+        },
+        {
+          "id": "SW01",
+          "system": "waste",
+          "points": [
+            [
+              1000,
+              9000,
+              -700
+            ],
+            [
+              17000,
+              9000,
+              -1020
+            ]
+          ],
+          "diameter": 110
+        },
+        {
+          "id": "EL01",
+          "system": "power",
+          "points": [
+            [
+              500,
+              500,
+              2600
+            ],
+            [
+              500,
+              3000,
+              2600
+            ],
+            [
+              3500,
+              3000,
+              2600
+            ]
+          ],
+          "diameter": 20
+        },
+        {
+          "id": "LV01",
+          "system": "data",
+          "points": [
+            [
+              1000,
+              500,
+              2400
+            ],
+            [
+              1000,
+              2500,
+              2400
+            ],
+            [
+              3500,
+              2500,
+              2400
+            ]
+          ],
+          "diameter": 20
+        },
+        {
+          "id": "P04",
+          "system": "power",
+          "circuit": "C04",
+          "diameter": 20,
+          "points": [
+            [
+              500,
+              500,
+              2600
+            ],
+            [
+              2500,
+              500,
+              2600
+            ],
+            [
+              2500,
+              5000,
+              2600
+            ]
+          ]
+        },
+        {
+          "id": "AC04",
+          "system": "hvac",
+          "diameter": 200,
+          "points": [
+            [
+              500,
+              5000,
+              2800
+            ],
+            [
+              2500,
+              5000,
+              2800
+            ]
+          ]
+        },
+        {
+          "id": "P05",
+          "system": "power",
+          "circuit": "C05",
+          "diameter": 20,
+          "points": [
+            [
+              500,
+              500,
+              2600
+            ],
+            [
+              6500,
+              500,
+              2600
+            ],
+            [
+              6500,
+              5000,
+              2600
+            ]
+          ]
+        },
+        {
+          "id": "AC05",
+          "system": "hvac",
+          "diameter": 200,
+          "points": [
+            [
+              500,
+              5000,
+              2800
+            ],
+            [
+              6500,
+              5000,
+              2800
+            ]
+          ]
+        },
+        {
+          "id": "P06",
+          "system": "power",
+          "circuit": "C06",
+          "diameter": 20,
+          "points": [
+            [
+              500,
+              500,
+              2600
+            ],
+            [
+              13000,
+              500,
+              2600
+            ],
+            [
+              13000,
+              5000,
+              2600
+            ]
+          ]
+        },
+        {
+          "id": "AC06",
+          "system": "hvac",
+          "diameter": 200,
+          "points": [
+            [
+              500,
+              5000,
+              2800
+            ],
+            [
+              13000,
+              5000,
+              2800
+            ]
+          ]
+        },
+        {
+          "id": "P07",
+          "system": "power",
+          "circuit": "C07",
+          "diameter": 20,
+          "points": [
+            [
+              500,
+              500,
+              2600
+            ],
+            [
+              16500,
+              500,
+              2600
+            ],
+            [
+              16500,
+              5000,
+              2600
+            ]
+          ]
+        },
+        {
+          "id": "AC07",
+          "system": "hvac",
+          "diameter": 200,
+          "points": [
+            [
+              500,
+              5000,
+              2800
+            ],
+            [
+              16500,
+              5000,
+              2800
+            ]
+          ]
+        }
+      ],
+      "circuits": [
+        {
+          "id": "C01",
+          "use": "Chiếu sáng",
+          "power_w": 600,
+          "voltage": 230,
+          "breaker_a": 10,
+          "cable_mm2": 1.5
+        },
+        {
+          "id": "C02",
+          "use": "Ổ cắm",
+          "power_w": 2500,
+          "voltage": 230,
+          "breaker_a": 20,
+          "cable_mm2": 2.5
+        },
+        {
+          "id": "C03",
+          "use": "Điều hòa",
+          "power_w": 1800,
+          "voltage": 230,
+          "breaker_a": 20,
+          "cable_mm2": 2.5
+        },
+        {
+          "id": "C04",
+          "use": "AC 1 / DEMO",
+          "power_w": 1800,
+          "voltage": 230,
+          "breaker_a": 20,
+          "cable_mm2": 2.5
+        },
+        {
+          "id": "C05",
+          "use": "AC 2 / DEMO",
+          "power_w": 1800,
+          "voltage": 230,
+          "breaker_a": 20,
+          "cable_mm2": 2.5
+        },
+        {
+          "id": "C06",
+          "use": "AC 3 / DEMO",
+          "power_w": 1800,
+          "voltage": 230,
+          "breaker_a": 20,
+          "cable_mm2": 2.5
+        },
+        {
+          "id": "C07",
+          "use": "AC 4 / DEMO",
+          "power_w": 1800,
+          "voltage": 230,
+          "breaker_a": 20,
+          "cable_mm2": 2.5
+        }
+      ],
+      "fixtures_per_floor": {
+        "lights": 6,
+        "sockets": 6,
+        "wc": 2,
+        "basin": 2,
+        "shower": 2,
+        "data": 2,
+        "camera": 1,
+        "ac": 4
+      },
+      "earthing_resistance_target_ohm": 4,
+      "inspection_chamber_size": 600
+    },
+    "prices": {
+      "slab_concrete": 1500000,
+      "column_concrete": 1700000,
+      "beam_concrete": 1700000,
+      "foundation_concrete": 1500000,
+      "floor_finish": 350000,
+      "roof_waterproof": 180000,
+      "water_pipe": 65000,
+      "waste_pipe": 180000,
+      "power_conduit": 25000,
+      "data_conduit": 28000,
+      "light": 350000,
+      "socket": 120000,
+      "wc": 3500000,
+      "basin": 1500000,
+      "cabinet": 3200000,
+      "paving": 280000
+    },
+    "estimate_scope": {
+      "coverage_note": "Khối lượng các hạng mục đã dựng trong mô hình demo",
+      "excluded_items": [
+        "Cốt thép tổng hợp, xây trát, cửa và hạng mục chưa mô hình hóa",
+        "Nhân công, chi phí chung, thuế"
+      ],
+      "additional_items": [],
+      "scope_confirmed": false
+    },
+    "reviews": {},
+    "issues": [],
+    "extensions": {
+      "roof_type": "hip",
+      "pool": {
+        "origin": [
+          2000,
+          27500
+        ],
+        "width": 10000,
+        "depth": 5000
+      },
+      "elevator": {
+        "origin": [
+          12500,
+          6500
+        ],
+        "width": 2000,
+        "depth": 2200
+      },
+      "ceiling_service_zone": 300,
+      "fixtures": [
+        {
+          "id": "wc_1_1",
+          "floor": 1,
+          "kind": "wc",
+          "position": [
+            2000,
+            10000
+          ],
+          "host_room": "R1_4"
+        },
+        {
+          "id": "basin_1_1",
+          "floor": 1,
+          "kind": "basin",
+          "position": [
+            2700,
+            9500
+          ],
+          "host_room": "R1_4"
+        },
+        {
+          "id": "shower_1_1",
+          "floor": 1,
+          "kind": "shower",
+          "position": [
+            1000,
+            9500
+          ],
+          "host_room": "R1_4"
+        },
+        {
+          "id": "wc_1_2",
+          "floor": 1,
+          "kind": "wc",
+          "position": [
+            14000,
+            10000
+          ],
+          "host_room": "R1_5"
+        },
+        {
+          "id": "basin_1_2",
+          "floor": 1,
+          "kind": "basin",
+          "position": [
+            14700,
+            9500
+          ],
+          "host_room": "R1_5"
+        },
+        {
+          "id": "shower_1_2",
+          "floor": 1,
+          "kind": "shower",
+          "position": [
+            17000,
+            9500
+          ],
+          "host_room": "R1_5"
+        },
+        {
+          "id": "wc_2_1",
+          "floor": 2,
+          "kind": "wc",
+          "position": [
+            2000,
+            10000
+          ],
+          "host_room": "R2_4"
+        },
+        {
+          "id": "basin_2_1",
+          "floor": 2,
+          "kind": "basin",
+          "position": [
+            2700,
+            9500
+          ],
+          "host_room": "R2_4"
+        },
+        {
+          "id": "shower_2_1",
+          "floor": 2,
+          "kind": "shower",
+          "position": [
+            1000,
+            9500
+          ],
+          "host_room": "R2_4"
+        },
+        {
+          "id": "wc_2_2",
+          "floor": 2,
+          "kind": "wc",
+          "position": [
+            14000,
+            10000
+          ],
+          "host_room": "R2_5"
+        },
+        {
+          "id": "basin_2_2",
+          "floor": 2,
+          "kind": "basin",
+          "position": [
+            14700,
+            9500
+          ],
+          "host_room": "R2_5"
+        },
+        {
+          "id": "shower_2_2",
+          "floor": 2,
+          "kind": "shower",
+          "position": [
+            17000,
+            9500
+          ],
+          "host_room": "R2_5"
+        }
+      ],
+      "devices": [
+        {
+          "id": "lights_1_0",
+          "floor": 1,
+          "kind": "lights",
+          "position": [
+            3000,
+            3000
+          ]
+        },
+        {
+          "id": "lights_1_1",
+          "floor": 1,
+          "kind": "lights",
+          "position": [
+            9000,
+            3000
+          ]
+        },
+        {
+          "id": "lights_1_2",
+          "floor": 1,
+          "kind": "lights",
+          "position": [
+            15000,
+            3000
+          ]
+        },
+        {
+          "id": "lights_1_3",
+          "floor": 1,
+          "kind": "lights",
+          "position": [
+            3000,
+            14000
+          ]
+        },
+        {
+          "id": "lights_1_4",
+          "floor": 1,
+          "kind": "lights",
+          "position": [
+            9000,
+            14000
+          ]
+        },
+        {
+          "id": "lights_1_5",
+          "floor": 1,
+          "kind": "lights",
+          "position": [
+            15000,
+            14000
+          ]
+        },
+        {
+          "id": "sockets_1_0",
+          "floor": 1,
+          "kind": "sockets",
+          "position": [
+            500,
+            2000
+          ]
+        },
+        {
+          "id": "sockets_1_1",
+          "floor": 1,
+          "kind": "sockets",
+          "position": [
+            500,
+            14000
+          ]
+        },
+        {
+          "id": "sockets_1_2",
+          "floor": 1,
+          "kind": "sockets",
+          "position": [
+            7000,
+            16500
+          ]
+        },
+        {
+          "id": "sockets_1_3",
+          "floor": 1,
+          "kind": "sockets",
+          "position": [
+            17500,
+            2000
+          ]
+        },
+        {
+          "id": "sockets_1_4",
+          "floor": 1,
+          "kind": "sockets",
+          "position": [
+            17500,
+            14000
+          ]
+        },
+        {
+          "id": "sockets_1_5",
+          "floor": 1,
+          "kind": "sockets",
+          "position": [
+            11000,
+            500
+          ]
+        },
+        {
+          "id": "ac_1_0",
+          "floor": 1,
+          "kind": "ac",
+          "position": [
+            2500,
+            5000
+          ]
+        },
+        {
+          "id": "ac_1_1",
+          "floor": 1,
+          "kind": "ac",
+          "position": [
+            6500,
+            5000
+          ]
+        },
+        {
+          "id": "ac_1_2",
+          "floor": 1,
+          "kind": "ac",
+          "position": [
+            13000,
+            5000
+          ]
+        },
+        {
+          "id": "ac_1_3",
+          "floor": 1,
+          "kind": "ac",
+          "position": [
+            16500,
+            5000
+          ]
+        },
+        {
+          "id": "data_1_0",
+          "floor": 1,
+          "kind": "data",
+          "position": [
+            350,
+            3000
+          ]
+        },
+        {
+          "id": "data_1_1",
+          "floor": 1,
+          "kind": "data",
+          "position": [
+            350,
+            16200
+          ]
+        },
+        {
+          "id": "camera_1_0",
+          "floor": 1,
+          "kind": "camera",
+          "position": [
+            12600,
+            500
+          ]
+        },
+        {
+          "id": "lights_2_0",
+          "floor": 2,
+          "kind": "lights",
+          "position": [
+            3000,
+            3000
+          ]
+        },
+        {
+          "id": "lights_2_1",
+          "floor": 2,
+          "kind": "lights",
+          "position": [
+            9000,
+            3000
+          ]
+        },
+        {
+          "id": "lights_2_2",
+          "floor": 2,
+          "kind": "lights",
+          "position": [
+            15000,
+            3000
+          ]
+        },
+        {
+          "id": "lights_2_3",
+          "floor": 2,
+          "kind": "lights",
+          "position": [
+            3000,
+            14000
+          ]
+        },
+        {
+          "id": "lights_2_4",
+          "floor": 2,
+          "kind": "lights",
+          "position": [
+            9000,
+            14000
+          ]
+        },
+        {
+          "id": "lights_2_5",
+          "floor": 2,
+          "kind": "lights",
+          "position": [
+            15000,
+            14000
+          ]
+        },
+        {
+          "id": "sockets_2_0",
+          "floor": 2,
+          "kind": "sockets",
+          "position": [
+            500,
+            2000
+          ]
+        },
+        {
+          "id": "sockets_2_1",
+          "floor": 2,
+          "kind": "sockets",
+          "position": [
+            500,
+            14000
+          ]
+        },
+        {
+          "id": "sockets_2_2",
+          "floor": 2,
+          "kind": "sockets",
+          "position": [
+            7000,
+            16500
+          ]
+        },
+        {
+          "id": "sockets_2_3",
+          "floor": 2,
+          "kind": "sockets",
+          "position": [
+            17500,
+            2000
+          ]
+        },
+        {
+          "id": "sockets_2_4",
+          "floor": 2,
+          "kind": "sockets",
+          "position": [
+            17500,
+            14000
+          ]
+        },
+        {
+          "id": "sockets_2_5",
+          "floor": 2,
+          "kind": "sockets",
+          "position": [
+            11000,
+            500
+          ]
+        },
+        {
+          "id": "ac_2_0",
+          "floor": 2,
+          "kind": "ac",
+          "position": [
+            2500,
+            5000
+          ]
+        },
+        {
+          "id": "ac_2_1",
+          "floor": 2,
+          "kind": "ac",
+          "position": [
+            6500,
+            5000
+          ]
+        },
+        {
+          "id": "ac_2_2",
+          "floor": 2,
+          "kind": "ac",
+          "position": [
+            13000,
+            5000
+          ]
+        },
+        {
+          "id": "ac_2_3",
+          "floor": 2,
+          "kind": "ac",
+          "position": [
+            16500,
+            5000
+          ]
+        },
+        {
+          "id": "data_2_0",
+          "floor": 2,
+          "kind": "data",
+          "position": [
+            350,
+            3000
+          ]
+        },
+        {
+          "id": "data_2_1",
+          "floor": 2,
+          "kind": "data",
+          "position": [
+            350,
+            16200
+          ]
+        },
+        {
+          "id": "camera_2_0",
+          "floor": 2,
+          "kind": "camera",
+          "position": [
+            12600,
+            500
+          ]
+        }
+      ],
+      "partitions": [
+        {
+          "id": "W1_0",
+          "floor": 1,
+          "start": [
+            150,
+            8500
+          ],
+          "end": [
+            8000,
+            8500
+          ]
+        },
+        {
+          "id": "W1_1",
+          "floor": 1,
+          "start": [
+            12500,
+            8500
+          ],
+          "end": [
+            17850,
+            8500
+          ]
+        },
+        {
+          "id": "W1_2",
+          "floor": 1,
+          "start": [
+            8000,
+            8650
+          ],
+          "end": [
+            8000,
+            16850
+          ]
+        },
+        {
+          "id": "W1_3",
+          "floor": 1,
+          "start": [
+            150,
+            11000
+          ],
+          "end": [
+            4000,
+            11000
+          ]
+        },
+        {
+          "id": "W1_4",
+          "floor": 1,
+          "start": [
+            4000,
+            8650
+          ],
+          "end": [
+            4000,
+            11000
+          ]
+        },
+        {
+          "id": "W1_5",
+          "floor": 1,
+          "start": [
+            13000,
+            11000
+          ],
+          "end": [
+            17850,
+            11000
+          ]
+        },
+        {
+          "id": "W1_6",
+          "floor": 1,
+          "start": [
+            13000,
+            8650
+          ],
+          "end": [
+            13000,
+            11000
+          ]
+        },
+        {
+          "id": "W2_0",
+          "floor": 2,
+          "start": [
+            150,
+            8500
+          ],
+          "end": [
+            8000,
+            8500
+          ]
+        },
+        {
+          "id": "W2_1",
+          "floor": 2,
+          "start": [
+            12500,
+            8500
+          ],
+          "end": [
+            17850,
+            8500
+          ]
+        },
+        {
+          "id": "W2_2",
+          "floor": 2,
+          "start": [
+            8000,
+            8650
+          ],
+          "end": [
+            8000,
+            16850
+          ]
+        },
+        {
+          "id": "W2_3",
+          "floor": 2,
+          "start": [
+            150,
+            11000
+          ],
+          "end": [
+            4000,
+            11000
+          ]
+        },
+        {
+          "id": "W2_4",
+          "floor": 2,
+          "start": [
+            4000,
+            8650
+          ],
+          "end": [
+            4000,
+            11000
+          ]
+        },
+        {
+          "id": "W2_5",
+          "floor": 2,
+          "start": [
+            13000,
+            11000
+          ],
+          "end": [
+            17850,
+            11000
+          ]
+        },
+        {
+          "id": "W2_6",
+          "floor": 2,
+          "start": [
+            13000,
+            8650
+          ],
+          "end": [
+            13000,
+            11000
+          ]
+        }
+      ],
+      "rooms": [
+        {
+          "id": "R1_0",
+          "floor": 1,
+          "name": "KHÁCH / SHC",
+          "position": [
+            2500,
+            3000
+          ],
+          "usage": "living",
+          "boundary": [
+            150,
+            150,
+            7700,
+            8000
+          ]
+        },
+        {
+          "id": "R1_1",
+          "floor": 1,
+          "name": "BẾP / ĂN",
+          "position": [
+            13000,
+            2500
+          ],
+          "usage": "kitchen",
+          "boundary": [
+            8150,
+            150,
+            9700,
+            5600
+          ]
+        },
+        {
+          "id": "R1_2",
+          "floor": 1,
+          "name": "NGỦ 1",
+          "position": [
+            2000,
+            14500
+          ],
+          "usage": "bedroom",
+          "boundary": [
+            150,
+            11150,
+            7700,
+            5700
+          ]
+        },
+        {
+          "id": "R1_3",
+          "floor": 1,
+          "name": "NGỦ 2",
+          "position": [
+            13500,
+            14500
+          ],
+          "usage": "bedroom",
+          "boundary": [
+            8150,
+            11150,
+            9700,
+            5700
+          ]
+        },
+        {
+          "id": "R1_4",
+          "floor": 1,
+          "name": "WC 1",
+          "position": [
+            1200,
+            10500
+          ],
+          "usage": "bathroom",
+          "boundary": [
+            150,
+            8650,
+            3850,
+            2350
+          ]
+        },
+        {
+          "id": "R1_5",
+          "floor": 1,
+          "name": "WC 2",
+          "position": [
+            15000,
+            10500
+          ],
+          "usage": "bathroom",
+          "boundary": [
+            13150,
+            8650,
+            4700,
+            2350
+          ]
+        },
+        {
+          "id": "R2_0",
+          "floor": 2,
+          "name": "KHÁCH / SHC",
+          "position": [
+            2500,
+            3000
+          ],
+          "usage": "living",
+          "boundary": [
+            150,
+            150,
+            7700,
+            8000
+          ]
+        },
+        {
+          "id": "R2_1",
+          "floor": 2,
+          "name": "BẾP / ĂN",
+          "position": [
+            13000,
+            2500
+          ],
+          "usage": "kitchen",
+          "boundary": [
+            8150,
+            150,
+            9700,
+            5600
+          ]
+        },
+        {
+          "id": "R2_2",
+          "floor": 2,
+          "name": "NGỦ 1",
+          "position": [
+            2000,
+            14500
+          ],
+          "usage": "bedroom",
+          "boundary": [
+            150,
+            11150,
+            7700,
+            5700
+          ]
+        },
+        {
+          "id": "R2_3",
+          "floor": 2,
+          "name": "NGỦ 2",
+          "position": [
+            13500,
+            14500
+          ],
+          "usage": "bedroom",
+          "boundary": [
+            8150,
+            11150,
+            9700,
+            5700
+          ]
+        },
+        {
+          "id": "R2_4",
+          "floor": 2,
+          "name": "WC 1",
+          "position": [
+            1200,
+            10500
+          ],
+          "usage": "bathroom",
+          "boundary": [
+            150,
+            8650,
+            3850,
+            2350
+          ]
+        },
+        {
+          "id": "R2_5",
+          "floor": 2,
+          "name": "WC 2",
+          "position": [
+            15000,
+            10500
+          ],
+          "usage": "bathroom",
+          "boundary": [
+            13150,
+            8650,
+            4700,
+            2350
+          ]
+        }
+      ],
+      "openings": [
+        {
+          "id": "O1_0",
+          "floor": 1,
+          "kind": "door",
+          "position": [
+            8000,
+            0
+          ],
+          "width": 1200,
+          "vertical": false
+        },
+        {
+          "id": "O1_1",
+          "floor": 1,
+          "kind": "window",
+          "position": [
+            2000,
+            16850
+          ],
+          "width": 1800,
+          "vertical": false
+        },
+        {
+          "id": "O1_2",
+          "floor": 1,
+          "kind": "window",
+          "position": [
+            14000,
+            16850
+          ],
+          "width": 1800,
+          "vertical": false
+        },
+        {
+          "id": "O1_3",
+          "floor": 1,
+          "kind": "door",
+          "position": [
+            4000,
+            9000
+          ],
+          "width": 900,
+          "vertical": true
+        },
+        {
+          "id": "O1_4",
+          "floor": 1,
+          "kind": "door",
+          "position": [
+            13000,
+            9000
+          ],
+          "width": 900,
+          "vertical": true
+        },
+        {
+          "id": "O1_5",
+          "floor": 1,
+          "kind": "door",
+          "position": [
+            5000,
+            8500
+          ],
+          "width": 900,
+          "vertical": false
+        },
+        {
+          "id": "O2_0",
+          "floor": 2,
+          "kind": "door",
+          "position": [
+            8000,
+            0
+          ],
+          "width": 1200,
+          "vertical": false
+        },
+        {
+          "id": "O2_1",
+          "floor": 2,
+          "kind": "window",
+          "position": [
+            2000,
+            16850
+          ],
+          "width": 1800,
+          "vertical": false
+        },
+        {
+          "id": "O2_2",
+          "floor": 2,
+          "kind": "window",
+          "position": [
+            14000,
+            16850
+          ],
+          "width": 1800,
+          "vertical": false
+        },
+        {
+          "id": "O2_3",
+          "floor": 2,
+          "kind": "door",
+          "position": [
+            4000,
+            9000
+          ],
+          "width": 900,
+          "vertical": true
+        },
+        {
+          "id": "O2_4",
+          "floor": 2,
+          "kind": "door",
+          "position": [
+            13000,
+            9000
+          ],
+          "width": 900,
+          "vertical": true
+        },
+        {
+          "id": "O2_5",
+          "floor": 2,
+          "kind": "door",
+          "position": [
+            5000,
+            8500
+          ],
+          "width": 900,
+          "vertical": false
+        }
+      ],
+      "furniture": [
+        {
+          "id": "BED1_0",
+          "floor": 1,
+          "kind": "bed",
+          "position": [
+            2500,
+            12000
+          ],
+          "width": 1600,
+          "depth": 2000,
+          "host_room": "R1_2"
+        },
+        {
+          "id": "BED1_1",
+          "floor": 1,
+          "kind": "bed",
+          "position": [
+            14000,
+            12000
+          ],
+          "width": 1600,
+          "depth": 2000,
+          "host_room": "R1_3"
+        },
+        {
+          "id": "BED2_0",
+          "floor": 2,
+          "kind": "bed",
+          "position": [
+            2500,
+            12000
+          ],
+          "width": 1600,
+          "depth": 2000,
+          "host_room": "R2_2"
+        },
+        {
+          "id": "BED2_1",
+          "floor": 2,
+          "kind": "bed",
+          "position": [
+            14000,
+            12000
+          ],
+          "width": 1600,
+          "depth": 2000,
+          "host_room": "R2_3"
+        }
+      ]
+    }
+  },
+  "branding": {
+    "project_code": "BXP-VILLA"
+  }
+}

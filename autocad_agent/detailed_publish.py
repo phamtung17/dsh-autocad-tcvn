@@ -12,7 +12,14 @@ from .runtime import workspace,atomic_json
 from .cad_com import retry_com
 
 
-def publish_new_design(spec,branding=None,progress=None,*,sheet_codes=None):
+def publish_new_design(spec,branding=None,progress=None,*,sheet_codes=None,export_pdf=False):
+    if sheet_codes is None:
+        from .single_publish import publish_single_design
+        return publish_single_design(spec, branding, progress,export_pdf=export_pdf)
+    raise ValueError('SEPARATE_SHEET_EXPORT_DISABLED: export one complete DWG; sheet selections must not create separate drawing files')
+
+
+def publish_separate_sheets(spec,branding=None,progress=None,*,sheet_codes=None):
     import pythoncom,win32com.client as win32
     from pypdf import PdfReader,PdfWriter
     project=build_project(spec);brand=normalize_brand(branding)
@@ -69,7 +76,7 @@ def publish_new_design(spec,branding=None,progress=None,*,sheet_codes=None):
                 retry(lambda:setattr(layout,'UseStandardScale',True));retry(lambda:setattr(layout,'StandardScale',win32.constants.ac1_1))
                 if 'monochrome.ctb' not in retry(lambda:list(layout.GetPlotStyleTableNames())):raise RuntimeError('monochrome.ctb is missing')
                 retry(lambda:setattr(layout,'StyleSheet','monochrome.ctb'));retry(lambda:setattr(layout,'PlotWithPlotStyles',True))
-                retry(lambda:doc.Regen(win32.constants.acAllViewports));retry(lambda:doc.SaveAs(str(dwg)))
+                retry(lambda:doc.Regen(win32.constants.acAllViewports));retry(lambda:doc.SaveAs(str(dwg),win32.constants.ac2018_dwg))
                 if not retry(lambda:doc.Plot.PlotToFile(str(pdf)),timeout=60):raise RuntimeError('AutoCAD PDF plot failed')
                 native_dxf=dxf_dir/(sheet['code']+'_native.dxf')
                 retry(lambda:doc.SaveAs(str(native_dxf),win32.constants.ac2013_dxf))

@@ -6,7 +6,8 @@ def write_delivery_index(target,report,project):
     with (target/'SHEET_INDEX.csv').open('w',encoding='utf-8-sig',newline='') as f:
         writer=csv.writer(f);writer.writerow(['code','title','stage','role','floor','dwg','pdf','revision'])
         for row in report['sheets']:writer.writerow([row['code'],row['title'],row['stage'],row['role'],row['floor'],
-                                                   'DWG/'+row['code']+'.dwg','PDF/'+row['code']+'.pdf',project['spec']['revision']])
+                                                   report.get('dwg_relative_path','DWG/PROJECT.dwg') if report.get('output_mode')=='SINGLE_DWG_MULTIPLE_LAYOUTS' else 'DWG/'+row['code']+'.dwg',
+                                                   'PDF/'+row['code']+'.pdf' if report.get('pdf_exported',True) else '',project['spec']['revision']])
     with (target/'TAKEOFF_COST.csv').open('w',encoding='utf-8-sig',newline='') as f:
         writer=csv.DictWriter(f,fieldnames=list(project['takeoff'][0]));writer.writeheader();writer.writerows(project['takeoff'])
     atomic_json(target/'WORKFLOW_QA.json',project['workflow'])
@@ -46,7 +47,11 @@ def verify_delivery(project_id):
         problems.append({'type':'INCOMPLETE_WORKFLOW_STAGES'})
     for sheet in report['sheets']:
         for folder,suffix in [('DWG','.dwg'),('PDF','.pdf'),('DWG','_native.dxf')]:
-            path=f"{folder}/{sheet['code']}{suffix}"
+            if folder=='PDF' and not report.get('pdf_exported',True):continue
+            if suffix=='_native.dxf' and not report.get('native_dxf_delivery',True):continue
+            code='PROJECT' if report.get('output_mode')=='SINGLE_DWG_MULTIPLE_LAYOUTS' and folder=='DWG' else sheet['code']
+            path=f"{folder}/{code}{suffix}"
+            if suffix=='.dwg' and report.get('dwg_relative_path'):path=report['dwg_relative_path']
             if not any(r['path']==path for r in value['files']):problems.append({'path':path,'type':'MISSING_MANIFEST_ENTRY'})
     return {'status':'INTEGRITY_CHECKED' if not problems else 'HANDOVER_BLOCKED','sheet_count':len(report['sheets']),
             'checked_files':len(value['files']),'issues':problems,'construction_release':False,

@@ -37,40 +37,42 @@ def stair_plan(p,s):
     p.text('UP',x+100,y+350,paper=2);p.text('DN',x+w+250,y+350,paper=2)
 
 def plan_base(p,s,floor=1,furniture=False,dim=True,references=True):
+    if 'partitions' in s.get('extensions',{}):
+        from .building_extensions import draw_custom_plan
+        draw_custom_plan(p,s,floor,furniture);stair_plan(p,s)
+        if dim:grids(p,s)
+        return
     b=s['building'];W,D,t=b['width'],b['depth'],b['wall'];dw=b['door_width'];ww=b['window_width'];fw=dw if floor==1 else ww;dx=W*.25-fw/2;wx=W*.70-ww/2;wx2=W*.25-ww/2;middoor=W*.25-dw/2
-    walls=[(0,0,t,D),(W-t,0,t,D),(t,0,dx-t,t),(dx+fw,0,wx-dx-fw,t),(wx+ww,0,W-t-wx-ww,t),
-           (t,D-t,wx2-t,t),(wx2+ww,D-t,wx-wx2-ww,t),(wx+ww,D-t,W-t-wx-ww,t),
-           (W/2,t,t,900),(W/2,900+dw,t,D/2-900-dw),
-           (W/2,D/2,t,D/2-t),
-           (t,D/2,middoor-t,t),(middoor+dw,D/2,W/2-middoor-dw,t),
-           (W-1800,t,t,950),(W-1800,950+dw,t,3000-950-dw),
-           (W-1800,3000,1800-t,t)]
-    for x,y,w,h in walls:
+    from .spatial_rules import resolve_openings,cut_walls,draw_opening
+    walls,ops,issues=resolve_openings(s,floor)
+    for x,y,w,h in cut_walls(walls,ops):
         if w>0 and h>0:p.rect(x,y,w,h,'A-WALL');p.hatch(x,y,w,h,'ANSI31',8)
-    if floor==1:p.door(dx,t,dw)
-    else:
-        for j in (0,.5,1):p.line((dx,j*t),(dx+fw,j*t),'A-WINDOW')
-    p.door(middoor,D/2+t,dw);p.door(W/2+t,900,dw,True)
-    p.rect(W-1800-dw,950+dw,dw,35,'A-DOOR');p.arc(W-1800,950+dw,dw,180,270)
-    for j in (0,.5,1):
-        p.line((wx,D-t+j*t),(wx+ww,D-t+j*t),'A-WINDOW');p.line((wx2,D-t+j*t),(wx2+ww,D-t+j*t),'A-WINDOW');p.line((wx,j*t),(wx+ww,j*t),'A-WINDOW')
+    for op in ops:draw_opening(p,op)
     stair_plan(p,s)
     labels=[('KHÁCH / SINH HOẠT',W*.16,D*.25),('BẾP / ĂN',W*.58,D*.25)] if floor==1 else [
             ('PHÒNG NGỦ 1',W*.29,D*.2),('PHÒNG NGỦ 2',W*.58,D*.4)]
     labels.append(('PHÒNG NGỦ',W*.28,D*.8))
-    for label,x,y in labels:p.mtext(label,x,y,2600,2.2)
+    from .annotation_rules import place_room_labels
+    place_room_labels(p,s,floor,[{'name':label,'position':[x,y]} for label,x,y in labels])
     p.mtext('WC',W-700,1800,450,2)
-    p.toilet(W-1000,2600);p.basin(W-1500,2200,500,400);p.rect(W-1400,350,900,900,'P-FIXTURE')
+    if 'fixtures' in s.get('extensions',{}):
+        from .building_extensions import placed
+        for item in placed(s,'fixtures',floor):
+            x,y=item['position']
+            if item['kind']=='wc':p.toilet(x,y)
+            elif item['kind']=='basin':p.basin(x,y,500,400)
+            else:p.rect(x-450,y-450,900,900,'P-FIXTURE')
+    else:p.toilet(W-1000,2600);p.basin(W-1500,2200,500,400);p.rect(W-1400,350,900,900,'P-FIXTURE')
     if furniture:
         if floor==1:
-            p.furniture(500,600,800,2000,'sofa');p.rect(1700,1000,1100,600,'A-FURNITURE')
+            p.furniture(500,600,800,2000,'sofa');p.rect(1700,2800,1100,600,'A-FURNITURE')
         else:p.furniture(500,600,1600,2000,'bed')
         p.furniture(500,D-2600,1600,2000,'bed');p.furniture(W/2-850,D-2400,600,1800,'wardrobe')
         if floor==1:
             f=s['finishes'];kx=W/2+t+100;p.rect(kx,400,f['cabinet_length'],f['cabinet_depth'],'A-JOINERY')
             p.basin(kx+150,450,500,450);p.rect(kx+f['cabinet_length']-600,450,500,450,'A-APPLIANCE')
             p.rect(W*.55,2400,1400,750,'A-FURNITURE')
-        else:p.furniture(W/2+500,600,1600,2000,'bed')
+        else:p.furniture(W/2+t,600,1600,2000,'bed')
     p.tag('D1' if floor==1 else 'W1',dx+fw/2,650,3);p.tag('W1',wx+ww/2,D-650,3)
     if references:
         p.tag('1',W*.38,D*.35,4);p.text('AR-201',W*.38-150,D*.35-400,paper=1.8)
@@ -127,13 +129,17 @@ def add_sheet(s,items,stage,role,code,title,bounds,draw,notes=None,detail=None,f
     job=builder.job()
     discipline={1:'civil',2:'civil',7:'structural',8:'plumbing',9:'electrical',10:'mep',12:'civil'}.get(stage,'architectural')
     job['discipline']=discipline
-    items.append({'code':code,'title':title,'stage':stage,'role':role,'floor':floor,'job':job,'views':builder.views,
+    items.append({'code':code,'title':title,'stage':stage,'role':role,'floor':floor,'job':job,'views':builder.views,'spatial_label_issues':getattr(builder,'spatial_label_issues',[]),
                   'main_entity_ids':main_ids,'references':list(refs),'input_hash':stage_hash(s,stage),'required_features':['table','dim_aligned','leader']+(['hatch'] if stage not in (8,9,10) else [])})
 
 def site_plan(p,s,survey=False,landscape=False,grading=False):
     a,b=s['site'],s['building'];W,D=a['width'],a['depth'];ox,oy=a['building_origin']
     p.rect(0,0,W,D,'C-BOUNDARY');p.rect(ox,oy,b['width'],b['depth'],'A-BUILDING')
     p.rect(0,-a['road_width'],W,a['road_width'],'C-ROAD');p.text('ĐƯỜNG HIỆN HỮU / DEMO',1000,-a['road_width']/2)
+    pool=s.get('extensions',{}).get('pool')
+    if pool:
+        x,y=pool['origin'];p.rect(x,y,pool['width'],pool['depth'],'L-POOL')
+        p.hatch(x,y,pool['width'],pool['depth'],'ANSI37',100);p.text('HỒ BƠI / CHỜ THIẾT KẾ KỸ THUẬT',x+200,y+pool['depth']/2,paper=1.8)
     p.dim((0,0),(W,0),(W/2,-1200));p.dim((0,0),(0,D),(-1600,D/2))
     p.dim((0,oy),(ox,oy),(ox/2,oy-600));p.dim((ox,0),(ox,oy),(ox-700,oy/2))
     angle=math.radians(a['north_degrees']);x,y=W-1800,D-1800
@@ -146,6 +152,8 @@ def site_plan(p,s,survey=False,landscape=False,grading=False):
             p.line((x,y),(X,Y),'C-SURVEY')
     if landscape:
         for x,y in [(1000,3000),(1000,8000),(W-1000,3500),(W-1000,D-2000)]:
+            obstacles=[(ox,oy,b['width'],b['depth'])]+([(*pool['origin'],pool['width'],pool['depth'])] if pool else [])
+            if any(X-600<x<X+w+600 and Y-600<y<Y+h+600 for X,Y,w,h in obstacles):continue
             p.circle(x,y,600,'L-TREE');p.circle(x,y,90,'L-TREE')
         p.rect(1000,D-2500,6000,2000,'L-PLANTING');p.hatch(1000,D-2500,6000,2000,'EARTH',30)
         p.rect(ox+1000,0,2000,oy,'C-PAVING')
@@ -156,6 +164,9 @@ def site_plan(p,s,survey=False,landscape=False,grading=False):
         for x,y in [(1500,1500),(W-1500,1500)]:p.rect(x,y,600,600,'C-CHAMBER');p.tag('MH',x+300,y+1000,3)
 
 def elevation(p,s,rear=False):
+    if 'partitions' in s.get('extensions',{}):
+        from .building_extensions import draw_custom_elevation
+        draw_custom_elevation(p,s,rear=rear);return
     b=s['building'];W=b['width'];roof=b['levels'][-1];ww=b['window_width'];ws=b['window_sill'];wh=b['window_height']
     p.rect(0,0,W,roof,'A-ELEVATION')
     for i,z in enumerate(b['levels'][:-1]):
@@ -163,7 +174,10 @@ def elevation(p,s,rear=False):
         if i or rear:p.rect(W*.25-ww/2,z+ws,ww,wh,'A-WINDOW')
         else:p.rect(W*.25-b['door_width']/2,0,b['door_width'],b['door_height'],'A-DOOR')
         level_mark(p,W+300,z,f'{z/1000:+.3f}')
-    p.rect(-b['roof_overhang'],roof,W+2*b['roof_overhang'],150,'A-ROOF');p.rect(0,roof,W,b['parapet_height'],'A-PARAPET')
+    if s.get('extensions',{}).get('roof_type')=='hip':
+        from .building_extensions import draw_hip_elevation
+        draw_hip_elevation(p,s)
+    else:p.rect(-b['roof_overhang'],roof,W+2*b['roof_overhang'],150,'A-ROOF');p.rect(0,roof,W,b['parapet_height'],'A-PARAPET')
     p.dim((0,0),(W,0),(W/2,-500));p.dim((0,0),(0,roof),(-600,roof/2))
     p.leader([(W*.8,roof*.55),(W+300,roof*.65),(W+700,roof*.65)],'W02 / sơn ngoại thất\nTheo bảng vật liệu',1200)
 
@@ -183,10 +197,16 @@ def section(p,s):
             for j in range(int(b['stair_risers']/2)):back.extend([(sx+(b['stair_risers']/2-j)*run,z+h/2+(j+1)*r),(sx+(b['stair_risers']/2-j-1)*run,z+h/2+(j+1)*r)])
             p.poly(back,'A-STAIR');p.line((sx+run*b['stair_risers']/2,z+h/2-120),(sx,z+h-120),'S-STAIR')
             p.line((t,z+h-s['finishes']['ceiling_drop']),(D-t,z+h-s['finishes']['ceiling_drop']),'A-CEILING')
+    if s.get('extensions',{}).get('roof_type')=='hip':
+        from .building_extensions import draw_hip_elevation
+        draw_hip_elevation(p,s,True)
     p.dim((0,0),(D,0),(D/2,-550));p.dim((0,0),(0,roof),(-600,roof/2))
     p.leader([(D*.6,roof-st['slab_thickness']/2),(D+300,roof+400),(D+650,roof+400)],f"Sàn BTCT {st['slab_thickness']:g} mm",1200)
 
 def roof_plan(p,s):
+    if s.get('extensions',{}).get('roof_type')=='hip':
+        from .building_extensions import draw_hip_plan
+        draw_hip_plan(p,s);grids(p,s);return
     b=s['building'];W,D,o=b['width'],b['depth'],b['roof_overhang']
     p.rect(-o,-o,W+2*o,D+2*o,'A-ROOF');p.rect(0,0,W,D,'A-PARAPET')
     p.hatch(0,0,W,D,'ANSI37',80)
@@ -227,6 +247,15 @@ def wet_detail(p,s):
 
 def eaves_detail(p,s):
     b,f,st=s['building'],s['finishes'],s['structure'];o=b['roof_overhang'];sl=st['slab_thickness']
+    if s.get('extensions',{}).get('roof_type')=='hip':
+        slope=b['roof_slope'];x0=-o;x1=1400;y0=0;y1=(x1-x0)*slope
+        p.poly([(x0,y0),(x1,y1),(x1,y1-sl),(x0,y0-sl)],'S-ROOF',True)
+        p.rect(0,-st['beam_depth'],st['beam_width'],st['beam_depth'],'S-BEAM');p.hatch(0,-st['beam_depth'],st['beam_width'],st['beam_depth'],'AR-CONC',3)
+        for offset,layer in [(f['screed'],'A-SCREED'),(f['screed']+f['waterproofing'],'A-WATERPROOF'),(f['screed']+f['waterproofing']+f['tile'],'A-FINISH')]:p.line((x0,offset),(x1,y1+offset),layer)
+        p.dim((x0,0),(0,0),(x0/2,-st['beam_depth']-250))
+        for i,(label,offset) in enumerate([('Lớp lợp / vật liệu chờ chốt',f['screed']+f['waterproofing']+f['tile']),('Chống thấm / lớp nền theo đầu vào',f['screed']),('Bản / dầm mái theo tính toán',-sl)]):
+            p.leader([(700,(700-x0)*slope+offset),(1600,1000-i*400),(1850,1000-i*400)],label,1500,2)
+        return
     p.rect(-o,-sl,1400,sl,'S-SLAB');p.hatch(-o,-sl,1400,sl,'AR-CONC',2)
     p.rect(0,0,b['wall'],b['parapet_height'],'A-PARAPET');p.hatch(0,0,b['wall'],b['parapet_height'],'ANSI31',4)
     p.rect(150,0,900,f['screed'],'A-SCREED');p.poly([(150,200),(150,f['screed']),(1050,f['screed'])],'A-WATERPROOF')
@@ -246,6 +275,10 @@ def structure_plan(p,s,foundation=False):
     for x in b['grids_x']:p.rect(x-st['beam_width']/2,0,st['beam_width'],D,'S-BEAM')
     if not foundation:
         stair_plan(p,s);p.mtext(f"S1 / bản {st['slab_thickness']:g} mm\nÔ thang: không đổ sàn",W*.2,D*.35,2200,2.2)
+        lift=s.get('extensions',{}).get('elevator')
+        if lift:
+            x,y=lift['origin'];p.rect(x,y,lift['width'],lift['depth'],'S-OPENING')
+            p.leader([(x,y),(x+500,y-500),(x+900,y-500)],'Ô CHỜ THANG MÁY\nDầm viền / pit theo NCC và kỹ sư',2000,2)
 
 def footing_detail(p,s):
     st=s['structure'];fw,fd,cover=st['foundation_width'],st['foundation_depth'],st['cover'];bottom=st['foundation_bottom'];cw=st['column_width']
@@ -285,6 +318,7 @@ def slab_detail(p,s):
 def route_plan(p,s,system,floor,architectural_references=True):
     plan_base(p,s,floor,False,False,references=architectural_references)
     layers={'water':'P-WATER','waste':'P-WASTE','power':'E-POWER','data':'E-DATA','hvac':'M-HVAC'}
+    junctions=set()
     for route in service_routes(s,floor):
         if route['system']==system:
             points=[]
@@ -294,28 +328,34 @@ def route_plan(p,s,system,floor,architectural_references=True):
             if len(points)>1:p.poly(points,layers[system])
             else:p.circle(x,y,max(40,route['diameter']/2),layers[system])
             if route.get('parent'):
-                p.circle(x,y,25,layers[system]);continue
+                if (x,y) not in junctions:p.circle(x,y,25,layers[system]);junctions.add((x,y))
+                continue
             if system=='hvac':
                 for a,c in zip(points,points[1:]):
                     length=math.dist(a,c);dx=-(c[1]-a[1])/length*route['diameter']/2;dy=(c[0]-a[0])/length*route['diameter']/2
                     for sign in (-1,1):p.line((a[0]+sign*dx,a[1]+sign*dy),(c[0]+sign*dx,c[1]+sign*dy),layers[system])
-                p.rect(points[0][0]-300,points[0][1]-150,600,300,'M-EQUIP');p.rect(x-450,y-150,900,300,'M-EQUIP')
+                if 'devices' not in s.get('extensions',{}):p.rect(points[0][0]-300,points[0][1]-150,600,300,'M-EQUIP');p.rect(x-450,y-150,900,300,'M-EQUIP')
             p.tag(route['id'],2000 if system=='data' else x-350,3100 if system=='data' else y+400,4)
             leader_points=[(x,y),(2700,3500),(3000,3500)] if system=='data' else [(x,y),(x-700,y-500),(x-1000,y-500)]
             p.leader(leader_points,f"{route['id']} / Ø{route['diameter']:g}\nZ {route['points'][-1][2]:g} mm so với tầng",1800,2)
+    if system=='hvac':
+        from .building_extensions import placed
+        for item in placed(s,'devices',floor):
+            if item['kind']=='ac':
+                x,y=item['position'];p.rect(x-450,y-150,900,300,'M-EQUIP')
     grids(p,s)
 
 def lights_plan(p,s,floor,sockets=False):
     plan_base(p,s,floor,False,False);b=s['building'];W,D=b['width'],b['depth']
-    points=device_points(s,sockets)
+    points=device_points(s,sockets,floor)
     for i,(x,y) in enumerate(points,1):
         if sockets:p.rect(x-90,y-60,180,120,'E-SOCKET');p.text(f'S{i}',x+160,y+50,paper=1.7)
         else:p.circle(x,y,80,'E-LIGHT');p.line((x-120,y),(x+120,y),'E-LIGHT');p.line((x,y-120),(x,y+120),'E-LIGHT')
-    for route in circuit_routes(s):
+    for route in circuit_routes(s,floor):
         if route['circuit']==('C02' if sockets else 'C01') or sockets and route['circuit']=='C03':p.poly([(x,y) for x,y,z in route['points']],'E-CIRCUIT')
     if sockets:
-        for route in s['systems']['routes']:
-            if route['system']=='power':p.poly([(x,y) for x,y,z in route['points']],'E-FEEDER')
+        for route in service_routes(s,floor):
+            if route['system']=='power' and not route.get('parent'):p.poly([(x,y) for x,y,z in route['points']],'E-FEEDER')
     p.rect(300,300,450,180,'E-PANEL');p.tag('DB',550,950,3)
     for x in (W*.2,W*.7):p.dim((x,D*.2),(x,D*.8),(x-450,D*.5))
     # Circuit identities are given in the sheet legend and single-line diagram;
@@ -359,9 +399,9 @@ def earth_detail(p,s):
 
 def low_voltage(p,s,floor):
     route_plan(p,s,'data',floor,False);b=s['building'];W,D=b['width'],b['depth']
-    for label,(x,y) in low_voltage_points(s):
-        if label!='CAM':p.rect(x,y,180,150,'E-DATA');p.tag(label,x+300,y+450,4)
-    p.rect(W*.7,500,300,180,'E-CCTV');p.arc(W*.7+150,500,900,30,150,'E-CCTV')
+    for label,(x,y) in low_voltage_points(s,floor):
+        if not label.startswith('CAM'):p.rect(x,y,180,150,'E-DATA');p.tag(label,x+300,y+450,4)
+        else:p.rect(x,y,300,180,'E-CCTV');p.arc(x+150,y,900,30,150,'E-CCTV')
     p.leader([(W*.7,500),(W-1200,D*.47),(W-1500,D*.47)],'CAM / vùng nhìn minh họa\nPhối hợp nguồn, mạng và góc lắp',2200,1.8)
 
 def hvac_detail(p,s):
@@ -396,6 +436,13 @@ def bathroom_elevation(p,s):
 
 def finish_plan(p,s,floor=1):
     b=s['building'];plan_base(p,s,floor,False,False);t=b['wall'];W,D=b['width'],b['depth']
+    if 'partitions' in s.get('extensions',{}):
+        from .building_extensions import custom_floor_rects
+        for x,y,w,h in custom_floor_rects(s,floor):p.hatch(x,y,w,h,'ANSI37',250)
+        p.tag('F01',W*.25,D*.35,4)
+        p.dim((t,t),(W-t,t),(W/2,-500))
+        p.leader([(W-800,D*.75),(W+200,D*.75),(W+600,D*.75)],'Sàn trừ vách và ô thang\nVật liệu / vùng ướt chờ chốt',2400,2)
+        return
     p.hatch(t,t,W/2-t,D/2-t,'ANSI37',80);p.hatch(W-1800+t,t,1800-2*t,3000-t,'NET',100)
     p.tag('F01',W*.25,D*.35,4);p.tag('F02',W-900,1500,4)
     p.dim((t,t),(W/2,t),(W/4,-500));p.dim((W-1800,t),(W,t),(W-900,-500))
@@ -408,12 +455,18 @@ def ceiling_plan(p,s,floor):
     p.tag('C01',W*.25,D*.65,4)
     p.leader([(W*.25,D*.6),(W*.5,D*.85),(W*.55,D*.85)],f"C01 / thạch cao {s['finishes']['gypsum']:g} mm\nHạ trần {s['finishes']['ceiling_drop']:g} mm",1800,2)
 
-def side_elevation(p,s):
+def side_elevation(p,s,rear=False):
+    if 'partitions' in s.get('extensions',{}):
+        from .building_extensions import draw_custom_elevation
+        draw_custom_elevation(p,s,True,rear);return
     b=s['building'];D=b['depth'];roof=b['levels'][-1]
     p.rect(0,0,D,roof,'A-ELEVATION')
     for z in b['levels']:
         p.line((0,z),(D,z),'A-FLOOR');level_mark(p,D+300,z,f'{z/1000:+.3f}')
-    p.rect(-b['roof_overhang'],roof,D+2*b['roof_overhang'],150,'A-ROOF');p.rect(0,roof,D,b['parapet_height'],'A-PARAPET')
+    if s.get('extensions',{}).get('roof_type')=='hip':
+        from .building_extensions import draw_hip_elevation
+        draw_hip_elevation(p,s,True)
+    else:p.rect(-b['roof_overhang'],roof,D+2*b['roof_overhang'],150,'A-ROOF');p.rect(0,roof,D,b['parapet_height'],'A-PARAPET')
     for y in b['grids_y']:p.line((y,0),(y,roof),'A-FINISH')
     p.dim((0,0),(D,0),(D/2,-500));p.dim((0,0),(0,roof),(-500,roof/2))
     p.leader([(D*.6,roof*.5),(D+300,roof*.6),(D+600,roof*.6)],'Mặt bên không ô mở\nTheo mô hình kiến trúc',1400)
@@ -531,7 +584,7 @@ def build_building_set(raw):
     add(4,'elevation_front','AR-201','MẶT ĐỨNG CHÍNH',elev_bounds,lambda p:elevation(p,s),refs=('AR-101','AR-502'))
     add(4,'elevation_rear','AR-202','MẶT ĐỨNG SAU',elev_bounds,lambda p:elevation(p,s,True),refs=('AR-101','AR-502'))
     add(4,'elevation_left','AR-203','MẶT ĐỨNG BÊN TRÁI',elev_bounds,lambda p:side_elevation(p,s),refs=('AR-101','AR-301'))
-    add(4,'elevation_right','AR-204','MẶT ĐỨNG BÊN PHẢI',elev_bounds,lambda p:side_elevation(p,s),refs=('AR-101','AR-301'))
+    add(4,'elevation_right','AR-204','MẶT ĐỨNG BÊN PHẢI',elev_bounds,lambda p:side_elevation(p,s,True),refs=('AR-101','AR-301'))
     add(4,'section','AR-301','MẶT CẮT A-A',[-1200,-1000,D+2700,b['levels'][-1]+1800],lambda p:section(p,s),refs=('AR-501','ST-203'))
     add(5,'roof','AR-401','MÁI / THOÁT NƯỚC MÁI',plan_bounds,lambda p:roof_plan(p,s),refs=('AR-504','PL-201'))
     add(6,'stair','AR-501','CẤU TẠO CẦU THANG',[-500,-500,3300,2600],lambda p:stair_detail(p,s),[['RISE',f"{(b['levels'][1]-b['levels'][0])/b['stair_risers']:.1f} mm / bậc"],['TREAD',f"{b['stair_run']:g} mm"]],refs=('AR-301','ST-203'))

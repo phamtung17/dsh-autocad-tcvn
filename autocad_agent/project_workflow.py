@@ -21,8 +21,9 @@ STAGES=[
 INPUTS={1:['site','source'],2:['site','building'],3:['building','finishes'],4:['building','structure'],5:['building','finishes'],
         6:['building','finishes','structure'],7:['structure','building'],8:['systems','building'],9:['systems','building'],
         10:['systems','building'],11:['building','finishes'],12:['site','systems','building'],13:['building','structure','systems','finishes','prices','estimate_scope'],14:['source','reviews','issues','revision','site','building','structure','systems','finishes','prices','estimate_scope']}
+for fields in INPUTS.values(): fields.append('extensions')
 
-def stage_hash(s,stage):return digest({'revision':s['revision'],**{k:s[k] for k in INPUTS[stage] if k!='reviews'}})
+def stage_hash(s,stage):return digest({'revision':s['revision'],**{k:s.get(k,{}) for k in INPUTS[stage] if k!='reviews'}})
 
 def clash_check(s):
     """AABB swept route versus columns, beams and slabs. Not a full 3D clash solver."""
@@ -79,6 +80,7 @@ def check_project(project):
         stages.append({'id':stage,'title':title,'dependencies':deps,'sheet_count':len(actual),'missing_roles':missing,
                        'input_hash':stage_hash(s,stage),'review':'USER_ATTESTED' if reviewed else 'REVIEW_REQUIRED'})
     for sheet in sheets:
+        for finding in sheet.get('spatial_label_issues',[]):issues.append(dict(severity='ERROR',sheet=sheet['code'],**finding))
         counts={k:sum(e['type']==k for e in sheet['job']['geometry']) for k in ('dim_aligned','leader','table','insert','hatch')}
         required=sheet.get('required_features',[])
         for feature in required:
@@ -105,10 +107,17 @@ def check_project(project):
         if sheet.get('input_hash')!=stage_hash(s,sheet['stage']):issues.append({'severity':'ERROR','type':'STALE_SHEET','sheet':sheet['code']})
         geo=geometry_report(sheet['job'])
         if geo['status']!='GEOMETRY_CHECKED':issues.append({'severity':'ERROR','type':'GEOMETRY_FAILED','sheet':sheet['code'],'findings':geo['findings']})
+    from .spatial_rules import check_spatial
+    spatial=check_spatial(s);issues.extend(spatial['findings'])
     clashes=clash_check(s);issues.extend(clashes['findings'])
     for item in s['issues']:
         if not isinstance(item,dict) or item.get('status')!='resolved':issues.append({'severity':'ERROR','type':'OPEN_PROJECT_ISSUE','stage':item.get('stage') if isinstance(item,dict) else 14,'issue':item})
     blockers=list(issues)
+    zone=s.get('extensions',{}).get('ceiling_service_zone',0)
+    if zone and s['finishes']['ceiling_drop']<s['structure']['beam_depth']+zone:
+        issues.append({'severity':'ERROR','type':'CEILING_SERVICE_CLEARANCE','stage':10,
+                       'required_drop_mm':s['structure']['beam_depth']+zone,'actual_drop_mm':s['finishes']['ceiling_drop']})
+        blockers.append(issues[-1])
     if s['mode']=='demo':blockers.append({'type':'DEMO_NOT_FOR_CONSTRUCTION'})
     for st in stages:
         if st['review']!='USER_ATTESTED':blockers.append({'type':'ENGINEERING_REVIEW_REQUIRED','stage':st['id']})
@@ -126,6 +135,7 @@ def check_project(project):
         if stage:
             action={'stage':stage,'reason':finding['type'],'action':'FIX_INPUT_OR_DRAWING_THEN_REBUILD','recheck_stage':14}
             if action not in repairs:repairs.append(action)
-    return {'status':'ERRORS_FOUND' if issues else 'MODELED_CONTENT_CHECKED','stages':stages,'issues':issues,
-            'coordination':clashes,'sheet_count':len(sheets),'release_status':'BLOCKED' if blockers else 'READY_FOR_HUMAN_RELEASE',
+    from .building_extensions import engineering_summary
+    return {'status':'ERRORS_FOUND' if issues else 'MODELED_CONTENT_CHECKED','stages':stages,'issues':issues,'engineering':engineering_summary(s),
+            'coordination':clashes,'spatial_rules':spatial,'sheet_count':len(sheets),'release_status':'BLOCKED' if blockers else 'READY_FOR_HUMAN_RELEASE',
             'repair_queue':repairs,'release_blockers':blockers,'tcvn_compliance':'NOT_CHECKED'}

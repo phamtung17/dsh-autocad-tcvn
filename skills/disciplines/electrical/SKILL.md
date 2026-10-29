@@ -46,3 +46,27 @@ Không tự suy ra thép, móng, CB, cỡ dây hoặc ống từ ví dụ. PCCC,
 tính kết cấu/điện/thủy lực và phối hợp BIM toàn phần chưa được tự động triển khai.
 Giữ boyxpxt.io.vn tạm thời; hỏi lại khung tên/logo trước khi xuất hồ sơ thật.
 Chi tiết ở `docs/PROJECT_WORKFLOW_V14_VI.md` trong checkout plugin.
+
+
+## Luồng xuất mặc định 1.5 local — ưu tiên hơn mô tả bản cũ
+
+cad_project_export/cad_fitout_export xuất **một PROJECT.dwg cho toàn bộ layout**.
+Plan/preview/prepare không khởi động AutoCAD. Export sau vé được duyệt mới kết nối
+hoặc khởi động AutoCAD, đặt Visible=True, đợi idle, xuất DWG định dạng native,
+mở lại DWG cuối và để mở. Không báo DXF là DWG; không tự chuyển sang ezdxf khi
+export lỗi rồi báo hoàn tất. Trả lỗi và đường dẫn báo cáo để sửa đúng tầng.
+Không dùng SendCommand/SCRIPT để phá modal, không tự kill AutoCAD của người dùng.
+Mẫu extensions trong examples/villa_18x17_explicit_demo.json hỗ trợ bố trí rõ theo
+ tầng, nhiều thiết bị/mạch, mái hip. Pool chỉ footprint, elevator chỉ ô giữ chỗ;
+không suy ra tính toán kỹ thuật. Xem docs/SINGLE_DWG_V15_VI.md. Tiếp tục dùng
+boyxpxt.io.vn tạm và hỏi lại branding trước khi xuất dự án thật.
+
+
+## Yêu cầu ưu tiên 1.5.1 — một bản vẽ, không tự xuất PDF
+
+Người dùng yêu cầu mọi mục chung trong MỘT DWG, cùng Model và có layout để in;
+không tạo thư mục bàn giao với DXF/DWG riêng từng mục. Mặc định mở Model.
+Không tự xuất PDF, cả khi preview. Dùng export_pdf=False (mặc định) ở preview/prepare.
+Chỉ đổi True sau khi người dùng nói rõ cần PDF. Không chạy các script cũ xuất PDF
+hoặc tách tờ rồi gọi đó là hoàn thành. DXF trung gian chỉ là cache kỹ thuật riêng.
+Với BT01 mở 00_DWG_CHUNG/BT01_TOAN_BO_HO_SO.dwg; giữ nguyên nội dung/khung tên hiện có.

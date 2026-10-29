@@ -17,6 +17,7 @@ try {
   fs.mkdirSync(output, {recursive:true});
   fs.mkdirSync(dwt, {recursive:true});
   const env = {...process.env,
+    PYTHONUTF8: '1',
     CAD_OUTPUT_DIR: output,
     CAD_DWT_DIR: dwt,
     CAD_RULES_DIR: process.env.CAD_RULES_DIR || path.join(PACKAGE_ROOT, 'standards', 'verified_rules'),

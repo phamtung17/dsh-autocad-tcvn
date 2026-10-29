@@ -11,20 +11,25 @@ def _home():
     for name in ('pending','approvals','permits'):(root/name).mkdir(parents=True,exist_ok=True)
     return root
 
-def prepare_design(spec,branding=None):
-    value=frozen(spec,branding)
+def prepare_design(spec,branding=None,export_pdf=False):
+    value=frozen(spec,branding,export_pdf)
     project=build_project(value['spec'])
     if project.get('workflow',{}).get('issues'):raise ValueError('PROJECT_QUALITY_GATE_FAILED: resolve sheet or coordination issues before native export')
     if value['spec']['mode']!='demo' and not value['branding']['confirmed']:
         raise ValueError('BRANDING_CONFIRMATION_REQUIRED: ask user for final title block and logo')
     ticket=_hash(value);atomic_json(_home()/'pending'/(ticket+'.json'),value)
     return {'status':'PREPARED_NEW_DESIGN','ticket':ticket,'sheet_count':len(project['sheets']),'approval':'REQUIRED',
+            'output_mode':'SINGLE_DWG_MULTIPLE_LAYOUTS','autocad_action':'After approval, export opens visible AutoCAD and creates native entities in small batches; prepare/preview stay offline',
+            'progress_tool':'cad_project_progress','project_id':value['spec']['project_id'],
+            'pdf_exported':export_pdf,'pdf_policy':'Only enable export_pdf after an explicit user PDF request',
+            'approval_executable':sys.executable,'approval_args':['-m','autocad_agent.cli','approve-design',ticket],
+            'approval_cwd':str(Path(__file__).resolve().parents[1]),
             'approval_command':f'python -m autocad_agent.cli approve-design {ticket}'}
 
 def _read(ticket):
     if not isinstance(ticket,str) or not DIGEST_RE.fullmatch(ticket):raise ValueError('Invalid design ticket')
     value=json.loads((_home()/'pending'/(ticket+'.json')).read_text(encoding='utf-8'))
-    if _hash(value)!=ticket or value!=frozen(value['spec'],value['branding']):raise PermissionError('Design or brand assets changed')
+    if _hash(value)!=ticket or value!=frozen(value['spec'],value['branding'],value.get('output_options',{}).get('export_pdf',False)):raise PermissionError('Design, output options or brand assets changed')
     return value
 
 def approve_design(ticket,interactive=True):
@@ -36,7 +41,7 @@ def approve_design(ticket,interactive=True):
     atomic_json(_home()/'approvals'/(ticket+'.json'),{'payload':payload,'signature':_sign(payload)})
     return {'status':'APPROVED_FOR_ONE_EXECUTION','ticket':ticket}
 
-def export_design(ticket,timeout=720):
+def export_design(ticket,timeout=840):
     value=_read(ticket);lock=workspace()/'cad_worker.lock'
     if (workspace()/'HALTED_AFTER_DESIGN_TIMEOUT').exists():raise RuntimeError('Inspect previous timed-out export')
     try:
@@ -44,7 +49,9 @@ def export_design(ticket,timeout=720):
     except FileExistsError:return {'status':'BUSY'}
     try:
         if os.environ.get('CAD_APPROVAL_MODE','manual')!='auto_new':
-            source=_home()/'approvals'/(ticket+'.json');taken=source.with_suffix('.taken');os.rename(source,taken)
+            source=_home()/'approvals'/(ticket+'.json');taken=source.with_suffix('.taken')
+            if not source.is_file():raise FileNotFoundError('APPROVAL_REQUIRED: run python -m autocad_agent.cli approve-design '+ticket+' in the plugin Python environment, then call export again. No AutoCAD export started.')
+            os.rename(source,taken)
             try:
                 approval=json.loads(taken.read_text(encoding='utf-8'));p=approval['payload']
                 if not hmac.compare_digest(_sign(p),approval['signature']) or p.get('ticket')!=ticket or p.get('kind')!='DESIGN_APPROVAL':raise PermissionError('Invalid design approval')

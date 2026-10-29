@@ -57,7 +57,7 @@ def example():
 def normalize(raw):
     if not isinstance(raw,dict):raise JobError('Building specification must be an object')
     s=deepcopy(raw);template=example()
-    if set(s)!=set(template):raise JobError('Building specification must explicitly provide: '+', '.join(sorted(set(template))))
+    if set(s)-{'extensions'}!=set(template):raise JobError('Building specification must explicitly provide: '+', '.join(sorted(set(template))))
     if s['engine']!='building_v1' or s['units']!='mm':raise JobError('Expected building_v1 with shared mm coordinates')
     checked_id(s['project_id']);text(s['project_name'],'project name',90);text(s['revision'],'revision',12)
     if s['mode'] not in ('demo','design_review'):raise JobError('mode must be demo or design_review')
@@ -69,7 +69,7 @@ def normalize(raw):
             if isinstance(template[group][key],(float,int)):
                 s[group][key]=finite(value,group+'.'+key,positive=key not in ('north_degrees','foundation_bottom'))
     b=s['building'];site=s['site'];st=s['structure'];f=s['finishes'];sy=s['systems']
-    if not 9000<=b['width']<=12000 or not 7000<=b['depth']<=14000:raise JobError('Current low-rise template supports width 9..12m and depth 7..14m')
+    if not 9000<=b['width']<=30000 or not 7000<=b['depth']<=30000:raise JobError('Rectangular library supports width 9..30m and depth 7..30m; custom room layouts require explicit extensions')
     if not 100<=b['wall']<=300:raise JobError('Unsupported wall thickness')
     if not 700<=b['door_width']<=1200 or b['window_width']>b['width']*.3:raise JobError('Door/window does not fit the supported facade bays')
     if f['cabinet_length']>b['width']/2-1800-b['wall']-100:raise JobError('Kitchen cabinet intersects bathroom wall')
@@ -90,14 +90,23 @@ def normalize(raw):
     if x+2*b['stair_width']+150>b['width']-b['wall'] or y+(b['stair_risers']/2-1)*b['stair_run']+b['stair_width']>b['depth']-b['wall']:raise JobError('Stair does not fit footprint')
     if st['foundation_bottom']>=-st['foundation_depth'] or st['cover']*2>=min(st['column_width'],st['beam_width']):raise JobError('Invalid foundation or reinforcement cover')
     if st['column_bars'] not in (4,8,12,16):raise JobError('Rectangular column requires 4, 8, 12 or 16 perimeter bars')
-    if not 0<b['roof_slope']<=.1 or not 0<sy['drain_slope']<=.2:raise JobError('Unsupported slope')
+    if not 0<b['roof_slope']<=(.6 if s.get('extensions',{}).get('roof_type')=='hip' else .1) or not 0<sy['drain_slope']<=.2:raise JobError('Unsupported slope')
     if f['panel']*2>=f['cabinet_depth'] or f['counter']>=f['cabinet_height']/3:raise JobError('Invalid cabinet assembly')
     if set(sy['fixtures_per_floor'])!=set(template['systems']['fixtures_per_floor']):raise JobError('Fixture schedule fields missing')
     # Fixture placements are a declared template. Counts cannot silently diverge.
-    if sy['fixtures_per_floor']!=template['systems']['fixtures_per_floor']:raise JobError('Current template fixture counts are fixed; custom placement requires a new template')
+    from .building_extensions import normalize_extensions,placed
+    normalize_extensions(s)
+    for field,count in sy['fixtures_per_floor'].items():
+        if type(count) is not int or not 0<=count<=100:raise JobError('Fixture counts must be integers 0..100')
+        group='fixtures' if field in ('wc','basin','shower') else 'devices'
+        if group in s['extensions']:
+            for floor in range(1,len(b['levels'])):
+                if sum(v['kind']==field for v in placed(s,group,floor))!=count:raise JobError('Placed '+field+' count differs from schedule on floor '+str(floor))
+        elif count!=template['systems']['fixtures_per_floor'][field]:raise JobError('Custom counts require explicit '+group+' positions')
     ids=set()
     for route in seq(sy['routes'],'routes',1,100):
-        if set(route)!={'id','system','points','diameter'} or route['system'] not in ('water','waste','power','data','hvac'):raise JobError('Invalid route')
+        if not {'id','system','points','diameter'}<=set(route) or set(route)-{'id','system','points','diameter','circuit','floor'} or route['system'] not in ('water','waste','power','data','hvac'):raise JobError('Invalid route')
+        if 'floor' in route and (type(route['floor']) is not int or not 1<=route['floor']<len(b['levels'])):raise JobError('Invalid route floor')
         if not isinstance(route['id'],str) or not IDENT_RE.fullmatch(route['id']):raise JobError('Invalid route id')
         if route['id'] in ids:raise JobError('Duplicate route id')
         ids.add(route['id']);route['diameter']=finite(route['diameter'],'diameter',positive=True)
@@ -106,14 +115,17 @@ def normalize(raw):
         if any(not 0<=x<=b['width'] or not 0<=y<=b['depth'] for x,y,z in route['points']):raise JobError('Route outside building')
     if set(r['system'] for r in sy['routes'])!={'water','waste','power','data','hvac'}:raise JobError('All five route systems must be explicit')
     ids=set()
-    for c in seq(sy['circuits'],'circuits',1,20):
+    for c in seq(sy['circuits'],'circuits',1,24):
         if set(c)!={'id','use','power_w','voltage','breaker_a','cable_mm2'}:raise JobError('Invalid circuit')
         if not isinstance(c['id'],str) or not IDENT_RE.fullmatch(c['id']):raise JobError('Invalid circuit id')
         text(c['use'],'circuit use',80)
         if c['id'] in ids:raise JobError('Duplicate circuit id')
         ids.add(c['id'])
         for k in ('power_w','voltage','breaker_a','cable_mm2'):c[k]=finite(c[k],k,positive=True)
-    if ids!={'C01','C02','C03'}:raise JobError('This template requires exactly C01 lighting, C02 sockets and C03 air-conditioning')
+    if not {'C01','C02','C03'}<=ids:raise JobError('Base circuits C01/C02/C03 required; additional circuits supported in SLD/schedule; layout needs explicit power routes')
+    for route in sy['routes']:
+        if 'circuit' in route and (route['system']!='power' or route['circuit'] not in ids):raise JobError('Invalid route circuit reference')
+    if ids-{'C01','C02','C03'}-{r.get('circuit') for r in sy['routes']}:raise JobError('Additional circuits require explicit power route with matching circuit id')
     if not isinstance(s['reviews'],dict) or not isinstance(s['issues'],list):raise JobError('reviews/issues must be explicit')
     scope=s['estimate_scope']
     if not isinstance(scope,dict) or set(scope)!={'coverage_note','excluded_items','additional_items','scope_confirmed'}:raise JobError('Explicit estimate scope required')
@@ -139,25 +151,36 @@ def normalize(raw):
 def floor_count(s):return len(s['building']['levels'])-1
 def route_length(route):return sum(math.dist(a,b) for a,b in zip(route['points'],route['points'][1:]))/1000
 
-def device_points(s,sockets=False):
+def device_points(s,sockets=False,floor=1):
+    from .building_extensions import placed
+    if 'devices' in s.get('extensions',{}):return [v['position'] for v in placed(s,'devices',floor) if v['kind']==('sockets' if sockets else 'lights')]
     W,D=s['building']['width'],s['building']['depth']
     if sockets:return [(350,1500),(350,D-1500),(W/2-350,D-1500),(W*.62,350),(W-350,3500),(W-350,D-1000)]
     return [(W*k,D*j) for k in (.2,.7) for j in (.2,.45,.8)]
 
-def low_voltage_points(s):
+def low_voltage_points(s,floor=1):
+    if 'devices' in s.get('extensions',{}):
+        from .building_extensions import placed
+        return [('CAM_'+v['id'] if v['kind']=='camera' else v['id'],v['position']) for v in placed(s,'devices',floor) if v['kind'] in ('data','camera')]
     b=s['building']
     return [('DATA1',[350,3000]),('DATA2',[350,b['depth']-800]),('CAM',[b['width']*.7,500])]
 
-def circuit_routes(s):
+def circuit_routes(s,floor=1):
     result=[]
     for sockets,circuit in [(False,'C01'),(True,'C02')]:
-        nodes=device_points(s,sockets);nodes=[(500,500)]+[nodes[i] for i in (0,1,2,5,4,3)];pts=[[500,500,2600]]
+        if 'devices' in s.get('extensions',{}):
+            for i,(x,y) in enumerate(device_points(s,sockets,floor),1):
+                pts=[[500,500,2600],[x,500,2600],[x,y,2600]]
+                pts=[p for k,p in enumerate(pts) if k==0 or p!=pts[k-1]]
+                if len(pts)>1:result.append({'id':circuit+'_BR'+str(i),'circuit':circuit,'parent':'EL01','system':'power','points':pts,'diameter':20})
+            continue
+        nodes=device_points(s,sockets,floor);nodes=[(500,500)]+([nodes[i] for i in (0,1,2,5,4,3)] if len(nodes)==6 else nodes);pts=[[500,500,2600]]
         for step,(x,y) in enumerate(nodes[1:],1):
             if pts[-1][0]!=x and pts[-1][1]!=y:
                 pts.append([pts[-1][0],y,2600] if sockets and step==4 else [x,pts[-1][1],2600])
             if pts[-1][:2]!=[x,y]:pts.append([x,y,2600])
-        result.append({'id':circuit+'_LAYOUT','circuit':circuit,'parent':'EL01','system':'power','points':pts,'diameter':20})
-    result.append({'id':'C03_LAYOUT','circuit':'C03','parent':'EL01','system':'power','points':[[500,500,2600],[500,7000,2600],[3500,7000,2600]],'diameter':20})
+        if len(pts)>1:result.append({'id':circuit+'_LAYOUT','circuit':circuit,'parent':'EL01','system':'power','points':pts,'diameter':20})
+    if 'devices' not in s.get('extensions',{}):result.append({'id':'C03_LAYOUT','circuit':'C03','parent':'EL01','system':'power','points':[[500,500,2600],[500,7000,2600],[3500,7000,2600]],'diameter':20})
     return result
 
 def service_routes(s,floor=1):
@@ -165,8 +188,11 @@ def service_routes(s,floor=1):
 
     Branch diameters inherit supplied inputs; this performs no hydraulic sizing.
     """
-    routes=deepcopy(s['systems']['routes']);b=s['building'];W=b['width'];t=b['wall']
+    routes=deepcopy([r for r in s['systems']['routes'] if r.get('floor',floor)==floor]);b=s['building'];W=b['width'];t=b['wall']
     fixtures=[('WC',[W-820,2600]),('BASIN',[W-1250,2400]),('SHOWER',[W-950,1100])]
+    if 'fixtures' in s.get('extensions',{}):
+        from .building_extensions import placed
+        fixtures=[(v['id'],v['position']) for v in placed(s,'fixtures',floor)]
     if floor==1:fixtures.append(('SINK',[W/2+t+500,675]))
     for system in ('water','waste'):
         trunks=[r for r in routes if r['system']==system and 'parent' not in r]
@@ -184,7 +210,7 @@ def service_routes(s,floor=1):
             routes.append({'id':parent['id']+'_'+label,'parent':parent['id'],'system':system,
                            'points':[start,anchor],'diameter':s['systems']['water_diameter'] if system=='water' else s['systems']['waste_diameter']})
     data_trunk=next(r for r in routes if r['system']=='data' and 'parent' not in r)
-    for label,point in low_voltage_points(s):
+    for label,point in low_voltage_points(s,floor):
         candidates=[]
         for a,c in zip(data_trunk['points'],data_trunk['points'][1:]):
             dx,dy=c[0]-a[0],c[1]-a[1];den=dx*dx+dy*dy
@@ -195,7 +221,7 @@ def service_routes(s,floor=1):
         points=[anchor,[point[0],anchor[1],anchor[2]],[point[0],point[1],anchor[2]]]
         points=[p for i,p in enumerate(points) if i==0 or p!=points[i-1]]
         if len(points)>1:routes.append({'id':data_trunk['id']+'_'+label,'parent':data_trunk['id'],'system':'data','points':points,'diameter':data_trunk['diameter']})
-    return routes+circuit_routes(s)
+    return routes+circuit_routes(s,floor)
 
 def takeoff(s):
     b,st,f=s['building'],s['structure'],s['finishes'];n=floor_count(s);W,D=b['width'],b['depth'];columns=len(b['grids_x'])*len(b['grids_y'])
@@ -217,6 +243,17 @@ def takeoff(s):
     for key,field in [('light','lights'),('socket','sockets'),('wc','wc'),('basin','basin')]:rows.append((key,field,s['systems']['fixtures_per_floor'][field]*n,'cái'))
     result=[{'code':code,'description':label,'quantity':round(q,6),'unit':unit,'unit_price':s['prices'][code],
              'amount':round(q*s['prices'][code],2),'basis':'MODELED_SCOPE_ONLY'} for code,label,q,unit in rows]
+    for row in result:
+        if row['code']=='floor_finish' and 'partitions' in s.get('extensions',{}):
+            from .building_extensions import custom_floor_area
+            row['quantity']=round(custom_floor_area(s),6)
+        if row['code']=='slab_concrete' and s.get('extensions',{}).get('elevator'):
+            lift=s['extensions']['elevator'];row['quantity']=max(0,row['quantity']-lift['width']*lift['depth']*st['slab_thickness']*n/1e9)
+        if row['code']=='roof_waterproof' and s.get('extensions',{}).get('roof_type')=='hip':
+            row['quantity']=round(row['quantity']*math.sqrt(1+b['roof_slope']**2),6);row['description']='Diện tích bốn mặt mái theo độ dốc'
+        if row['code']=='paving' and s.get('extensions',{}).get('pool'):
+            pool=s['extensions']['pool'];row['quantity']=max(0,row['quantity']-pool['width']*pool['depth']/1e6)
+        row['amount']=round(row['quantity']*row['unit_price'],2)
     for row in result:
         if row['code'] in ('power_conduit','data_conduit'):row['basis']='MODELED_ROUTES_SEPARATE_CONDUITS'
     for item in s['estimate_scope']['additional_items']:result.append({**item,'amount':round(item['quantity']*item['unit_price'],2)})
