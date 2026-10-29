@@ -1,3 +1,11 @@
+# Local upgrade 1.7.0-local — live AutoCAD drawing
+
+New project/fitout export now creates native Model entities in visible batches from an empty target Model, with Regen, AutoCAD command-line progress and cad_project_progress heartbeat/status. One DWG; no PDF by default. See [Live drawing guide](docs/LIVE_DRAWING_V17_VI.md).
+
+# Local upgrade 1.6.0-local — spatial drawing rules
+
+Hosted wall openings, synchronized wall/hatch cuts, door swing clearance, full object footprints, room usage/access and bounded label placement now gate project preparation. One DWG with layouts; PDF only by explicit request. See [Vietnamese rules](docs/SPATIAL_RULES_V16_VI.md). Legacy drawings require a separate audit; passing file integrity does not establish design correctness.
+
 # Local upgrade 1.2.0-local — native reference drawing sets
 
 See [Native reference profiles and fit-out publication](docs/REFERENCE_PROFILES_VI.md).
@@ -163,3 +171,12 @@ See [Vietnamese workflow](docs/NEW_DESIGN_V13_VI.md). Temporary brand: boyxpxt.i
 ## Local v1.4: fourteen-stage building dossier
 
 Shared model, detailed drawings per floor and discipline, revision/dependency checks, modeled route clashes, scoped estimate and hashed native handover. The two-storey demo has 58 A3 sheets. This is a bounded low-rise template, not autonomous engineering approval. See [workflow and limits](docs/PROJECT_WORKFLOW_V14_VI.md).
+# Bản local 1.5.1 — một DWG cho toàn bộ hồ sơ, không tự xuất PDF
+
+Xuất native mặc định tạo một `PROJECT.dwg`, mọi bộ môn nằm chung Model và các layout,
+tự kết nối/khởi động AutoCAD và mở Model. **PDF mặc định tắt, kể cả preview**;
+chỉ bật sau yêu cầu PDF rõ ràng của người dùng. DXF trung gian nằm trong cache riêng.
+Có kiểm chữ ký định dạng DWG, kích thước, hình học và viewport.
+Đầu vào mở rộng cho nhà 18×17 m, thiết bị theo tầng, mái hip và bố trí hồ/thang máy:
+xem [hướng dẫn và trạng thái từng nhóm lỗi](docs/SINGLE_DWG_V15_VI.md).
+Hồ/thang máy hiện chỉ là footprint/ô chờ; tính toán kỹ thuật vẫn cần chuyên gia.

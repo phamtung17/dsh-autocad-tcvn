@@ -1,0 +1,28 @@
+{
+  "id": "DSH_SPATIAL_1.0",
+  "authority": "PROJECT_GEOMETRY_RULES_NOT_TCVN_CERTIFICATION",
+  "units": "mm",
+  "tolerance_mm": 1.0,
+  "room_label_paper_height_mm": 2.5,
+  "room_label_paper_gap_mm": 0.8,
+  "blocking_rules": [
+    "OPENING_HOST_MISSING", "OPENING_HOST_AMBIGUOUS", "OPENINGS_OVERLAP",
+    "OPENING_AT_WALL_JUNCTION", "OPENING_INTERSECTS_COLUMN",
+    "DOOR_SWING_INTERSECTS_OBJECT", "DOOR_SWING_INTERSECTS_WALL", "DOOR_SWING_INTERSECTS_RESERVED_VOID",
+    "PLACEMENT_INTERSECTS_WALL", "PLACEMENT_INTERSECTS_RESERVED_VOID", "PLACEMENTS_OVERLAP",
+    "ROOM_LABEL_INSIDE_WALL_OR_VOID", "ROOM_UNREACHABLE_THROUGH_OPENINGS", "NO_VERIFIED_FLOOR_ENTRANCE",
+    "ROOM_LABEL_HAS_NO_CLEAR_POSITION_IN_ZONE", "OBJECT_ROOM_OR_BOUNDARY_REQUIRED",
+    "SANITARY_FIXTURE_NOT_IN_BATHROOM", "BED_NOT_IN_BEDROOM", "OBJECT_OUTSIDE_DECLARED_ROOM"
+  ],
+  "contracts": {
+    "wall_opening": "Resolve exactly one host wall before drawing. Cut only its solid outline and hatch from the same opening interval. Never guess an orphan host.",
+    "door": "Use a shared host-face hinge, closed axis, swing side and radius. Validate the swept quarter-sector against solid walls, equipment and reserved voids.",
+    "window": "Use the same hosted interval in plan and elevation. Reject overlapping openings and column/junction conflicts.",
+    "placement": "Compare full footprints rather than only insertion points. Preserve declared room/equipment coordinates; report unresolved conflicts.",
+    "labels": "Keep room labels in their declared or wall-derived local zone. Avoid walls, stair/elevator voids, fixtures and furniture. Block when no clear position exists.",
+    "connectivity": "Check free-space reachability from a verified floor entrance through actual openings to supplied room points. This is not a legal egress check.",
+    "presentation": "Keep views within their assigned frame and title-block zones. Review text overlap, clipping, font coverage and actual viewport scale.",
+    "delivery": "One DWG, Model plus layouts; no PDF unless explicitly requested. File validity never overrides spatial errors."
+  },
+  "manual_review": ["statutory widths and fire escape", "load-bearing design", "hydraulic/electrical sizing", "unmodeled objects", "legacy drawings without semantic room/floor/opening IDs"]
+}

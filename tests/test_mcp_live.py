@@ -25,5 +25,5 @@ async def test_stdio_mcp_tools_listed(tmp_path):
                 await session.initialize()
                 available=await session.list_tools()
                 names={t.name for t in available.tools}
-                assert len(names)==34
+                assert len(names)==35
                 assert {'cad_probe_autocad','cad_check_clause_rules','cad_plot_plan','cad_quality_gate'}.issubset(names)

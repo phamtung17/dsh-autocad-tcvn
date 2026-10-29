@@ -18,7 +18,7 @@
           CAD_RULES_DIR: !!js ctx.autocadBundle.rulesDir
           CAD_APPROVAL_MODE: manual
           CAD_AUTO_SETUP: '1'
-        toolCallTimeoutMs: 180000
+        toolCallTimeoutMs: 900000
         failOnStartupError: true
     - id: autocad-tcvn-skill-filesystem
       name: '@deepseek-ai/dsh-skill-filesystem'

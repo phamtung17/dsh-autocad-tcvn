@@ -43,6 +43,8 @@ class App:
     Version='25.0';Name='AutoCAD'
     def __init__(self):
         self.created=[];self.Documents=self
+        self._oleobj_=types.SimpleNamespace(GetTypeInfo=lambda:None)
+    def GetAcadState(self):return types.SimpleNamespace(IsQuiescent=True)
     def Add(self):
         doc=Doc();self.created.append(doc);return doc
 
@@ -106,3 +108,24 @@ def test_com_normalized_block_entity_with_no_explicit_layer(fake_com):
     result=create_dwg(job,home)
     assert result['status']=='DWG_CREATED_NEEDS_VISUAL_REVIEW'
     assert (home/'block_default_layer.dwg').exists()
+
+
+def test_connection_starts_visible_autocad_when_rot_is_empty(fake_com,monkeypatch):
+    from autocad_agent.autocad_session import connect
+    import win32com.client as client,pywintypes
+    app,home=fake_com;calls=[]
+    error=pywintypes.com_error('not running');error.hresult=-2147221021
+    def absent(name):raise error
+    monkeypatch.setattr(client,'GetActiveObject',absent)
+    monkeypatch.setattr(client,'Dispatch',lambda name:(calls.append(name),app)[1],raising=False)
+    assert connect() is app and app.Visible
+    assert calls==['AutoCAD.Application']
+
+
+def test_connection_does_not_mask_permission_error_as_cold_start(fake_com,monkeypatch):
+    from autocad_agent.autocad_session import connect
+    import win32com.client as client,pywintypes
+    error=pywintypes.com_error('access denied');error.hresult=-2147024891
+    def denied(name):raise error
+    monkeypatch.setattr(client,'GetActiveObject',denied)
+    with pytest.raises(pywintypes.com_error):connect()

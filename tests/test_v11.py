@@ -195,8 +195,8 @@ def test_clause_reject_path_traversal():
 
 
 def test_capabilities_updated():
-    c=capabilities();assert c['version']=='1.4.0-local'
-    assert len(c['tools'])==34
+    c=capabilities();assert c['version']=='1.7.0-local'
+    assert len(c['tools'])==35
 
 
 def test_gate_embedded_project_rules_enforced():

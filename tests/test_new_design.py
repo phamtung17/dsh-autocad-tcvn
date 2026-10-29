@@ -46,7 +46,7 @@ def test_unapproved_export_and_tamper_rejected(tmp_path,monkeypatch):
     with pytest.raises(FileNotFoundError):export_design(ticket)
     assert not (tmp_path/'cad_worker.lock').exists()
     with pytest.raises(ValueError):approve_design(ticket,interactive=False)
-    p=tmp_path/'design_jobs'/'pending'/(ticket+'.json');v=json.loads(p.read_text());v['spec']['width']=4500;p.write_text(json.dumps(v))
+    p=tmp_path/'design_jobs'/'pending'/(ticket+'.json');v=json.loads(p.read_text(encoding='utf-8'));v['spec']['width']=4500;p.write_text(json.dumps(v),encoding='utf-8')
     with pytest.raises(PermissionError):_read(ticket)
 
 def test_logo_hash_frozen_into_design_ticket(tmp_path,monkeypatch):

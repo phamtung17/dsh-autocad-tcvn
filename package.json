@@ -1,6 +1,6 @@
 {
   "name": "@phamtung17/dsh-autocad-tcvn",
-  "version": "1.4.0-local",
+  "version": "1.7.0-local",
   "description": "DeepSeek Harness installable bundle for AutoCAD 2025 TCVN engineering MCP tools and 10 skills",
   "type": "module",
   "main": "./index.js",
@@ -26,9 +26,17 @@
     "docs/REFERENCE_PROFILES_VI.md",
     "docs/NEW_DESIGN_V13_VI.md",
     "docs/PROJECT_WORKFLOW_V14_VI.md",
+    "docs/SINGLE_DWG_V15_VI.md",
+    "examples/villa_18x17_explicit_demo.json",
+    "tools/make_villa_example.py",
+    "tools/convert_existing_dxf.py",
+    "tools/audit_spatial_dxf.py",
+    "tools/render_cad_png.py",
+    "docs/SPATIAL_RULES_V16_VI.md",
     "examples/building_fourteen_stages.json",
     "examples/stu4_reference_job.json",
-    "VERSION.txt"
+    "VERSION.txt",
+    "docs/LIVE_DRAWING_V17_VI.md"
   ],
   "dsh": {
     "bundle": {

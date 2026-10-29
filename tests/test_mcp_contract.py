@@ -16,6 +16,6 @@ def test_tool_registration():
         module=importlib.import_module('autocad_agent.mcp_server')
         assert 'cad_template' in tools and 'cad_create_dwg' in tools
         assert 'cad_screen_standards' in tools
-        assert len(tools)==34
+        assert len(tools)==35
         assert {'cad_reference_profiles','cad_reference_profile','cad_reference_plan','cad_reference_prepare','cad_reference_export'}<=set(tools)
         assert module.cad_capabilities()['tcvn_compliance']=='NOT_CHECKED'
